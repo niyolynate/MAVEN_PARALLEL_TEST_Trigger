@@ -1,225 +1,349 @@
-# Handy URI Templates
+[![Build Status](https://secure.travis-ci.org/neuland/jade4j.png?branch=master)](http://travis-ci.org/neuland/jade4j)
+# Attention: jade4j is now pug4j
+In alignment with the javascript template engine we renamed jade4j to pug4j. You will find it under https://github.com/neuland/pug4j
+This is also a new release which supports almost the entire pug 2 syntax.
 
-[![Join the chat at https://gitter.im/damnhandy/Handy-URI-Templates](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/damnhandy/Handy-URI-Templates?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+Please report pug4j issues in the new repository.
+ 
+# jade4j - a jade implementation written in Java
+jade4j's intention is to be able to process jade templates in Java without the need of a JavaScript environment, while being **fully compatible** with the original jade syntax.
 
-[![Build Status](https://secure.travis-ci.org/damnhandy/Handy-URI-Templates.png?branch=master)](http://travis-ci.org/damnhandy/Handy-URI-Templates)
+## Contents
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.damnhandy/handy-uri-templates)
+- [Example](#example)
+- [Syntax](#syntax)
+- [Usage](#usage)
+- [Simple static API](#simple-api)
+- [Full API](#api)
+    - [Caching](#api-caching)
+    - [Output Formatting](#api-output)
+    - [Filters](#api-filters)
+    - [Helpers](#api-helpers)
+    - [Model Defaults](#api-model-defaults)
+    - [Template Loader](#api-template-loader)
+- [Expressions](#expressions)
+- [Reserved Words](#reserved-words)
+- [Framework Integrations](#framework-integrations)
+- [Breaking Changes](#breaking-changes)
+- [Authors](#authors)
+- [License](#license)
 
-Handy URI Templates is a uritemplate processor implementing [RFC6570](http://tools.ietf.org/html/rfc6570) written in Java. If you are looking for a non-Java implementation, please check the [RFC6570 implementations page](http://code.google.com/p/uri-templates/wiki/Implementations). The current implementation is based on the final release of the uri template spec. The template processor supports the following features:
 
-* Fluent Java API for manipulating uritemplates
-* Supports up to [level 4 template expressions](http://tools.ietf.org/html/rfc6570#section-1.2) including prefix and explode modifiers
-* Strong validation and error reporting
-* Java objects as template values
-* Support for rendering date values
-* Template expression validation
-* Custom object expanders
-* Support for [Jackson](http://jackson.codehaus.org/) serializers and deserializers.
-* Support for partial template expansion
+## Example
 
-As of version `1.1.1`, Handy URI Templates passes all tests defined by the [uritemplate-test](https://github.com/uri-templates/uritemplate-test) suite.
+index.jade
 
-You can view [code coverage here](https://damnhandy.github.io/Handy-URI-Templates/cobertura/).
+```
+doctype html
+html
+  head
+    title= pageName
+  body
+    ol#books
+      for book in books
+        if book.available
+          li #{book.name} for #{book.price} €
+```
 
-The complete [JavaDocs are here](http://damnhandy.github.io/Handy-URI-Templates/apidocs/).
+Java model
 
-## API Documentation
+```java
+List<Book> books = new ArrayList<Book>();
+books.add(new Book("The Hitchhiker's Guide to the Galaxy", 5.70, true));
+books.add(new Book("Life, the Universe and Everything", 5.60, false));
+books.add(new Book("The Restaurant at the End of the Universe", 5.40, true));
 
-JavaDocs are available on [Javadocs.io](http://www.javadoc.io/doc/com.damnhandy/handy-uri-templates)
+Map<String, Object> model = new HashMap<String, Object>();
+model.put("books", books);
+model.put("pageName", "My Bookshelf");
+```
 
-## Maven
+Running the above code through `String html = Jade4J.render("./index.jade", model)` will result in the following output:
 
-To use the latest version of Handy URI Templates, you need to add the following dependency to your `pom.xml`:
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Bookshelf</title>
+  </head>
+  <body>
+    <ol id="books">
+      <li>The Hitchhiker's Guide to the Galaxy for 5,70 €</li>
+      <li>The Restaurant at the End of the Universe for 5,40 €</li>
+    </ol>
+  </body>
+</html>
+```
+
+## Syntax
+
+We have put up an [interactive jade documentation](http://naltatis.github.com/jade-syntax-docs/).
+
+See also the original [visionmedia/jade documentation](https://github.com/visionmedia/jade#a6).
+
+## Usage
+
+### via Maven
+
+As of release 0.4.1, we have changed maven hosting to sonatype. Using Github Maven Repository is no longer
+required.
+
+Please be aware that we had to change the group id from 'de.neuland' to 'de.neuland-bfi' in order to
+meet sonatype conventions for group naming.
+
+Just add following dependency definitions to your `pom.xml`.
 
 ```xml
 <dependency>
-  <groupId>com.damnhandy</groupId>
-  <artifactId>handy-uri-templates</artifactId>
-  <version>2.1.7</version>
+  <groupId>de.neuland-bfi</groupId>
+  <artifactId>jade4j</artifactId>
+  <version>1.3.2</version>
 </dependency>
 ```
 
-The next version of Handy URI Templates includes some big changes to the API. If you want to be daring, you can use the `SNAPSHOT` release:
+### Build it yourself
 
-```xml
-<dependency>
-  <groupId>com.damnhandy</groupId>
-  <artifactId>handy-uri-templates</artifactId>
-  <version>2.1.8-SNAPSHOT</version>
-</dependency>
+Clone this repository ...
+
+```bash
+git clone https://github.com/neuland/jade4j.git
 ```
 
+... build it using `maven` ...
 
-
-In order to use a SNAPSHOT release, you'll have to add the Sonatype snapshots repository:
-
-```xml
-<repository>
-  <id>sonatype-nexus-snapshots</id>
-  <name>sonatype-nexus-snapshots</name>
-  <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-</repository>
+```bash
+cd jade4j
+mvn install
 ```
 
-You can also download the artifact directly at [http://search.maven.org](http://search.maven.org/#search%7Cga%7C1%7Chandy-uri-templates)
+... and use the `jade4j-1.x.x.jar` located in your target directory.
 
+<a name="simple-api"></a>
+## Simple static API
 
-## Basic Usage
-
-Using the library is simple:
+Parsing template and generating template in one step.
 
 ```java
-String uri =  UriTemplate.fromTemplate("/{foo:1}{/foo,thing*}{?query,test2}")
-                         .set("foo", "houses")
-                         .set("query", "Ask something")
-                         .set("test2", "someting else")
-                         .set("thing", "A test")
-                         .expand();
+String html = Jade4J.render("./index.jade", model);
 ```
 
-This will result in the following URI:
-
-	"/h/houses/A%20test?query=Ask%20something&test2=someting%20else"
-
-You can find more in the [JavaDocs](http://www.javadoc.io/doc/com.damnhandy/handy-uri-templates).
-
-## URI Template Builder API
-
-Starting in version 2.x, the `UriTemplateBuilder` was added to make it easier to programatically construct URI templates. It's used like this:
+If you use this in production you would probably do the template parsing only once per template and call the render method with different models.
 
 ```java
-UriTemplate template =
-      UriTemplate.buildFromTemplate("http://example.com")
-                 .literal("/foo")
-                 .path(var("thing1"),var("explodedThing", true))
-                 .fragment(var("prefix", 2))
-                 .build();
+JadeTemplate template = Jade4J.getTemplate("./index.jade");
+String html = Jade4J.render(template, model);
 ```
 
-This will yield the following URL template string:
-
-	"http://example.com/foo{/thing1,explodedThing*}{#prefix:2}"
-
-This API is still a work in progress an feedback is appreciated.
-
-## Using with HTTP Clients
-
-The API can be used with existing HTTP frameworks like the most excellent [Async Http Client](https://github.com/sonatype/async-http-client). Using the [GitHub API](http://developer.github.com/v3/repos/commits/), we can use the a `UriTemplate` to create a URI to look at this repository:
+Streaming output using a `java.io.Writer`
 
 ```java
-RequestBuilder builder = new RequestBuilder("GET");
-Request request = builder.setUrl(
-    UriTemplate.fromTemplate("https://api.github.com/repos{/user,repo,function,id}")
-               .set("user", "damnhandy")
-               .set("repo", "Handy-URI-Templates")
-               .set("function","commits")
-               .expand()).build();
+Jade4J.render(template, model, writer);
 ```
 
-When `Request.getUrl()` is called, it will return:
+<a name="api"></a>
+## Full API
 
-	"https://api.github.com/repos/damnhandy/Handy-URI-Templates/commits"
-
-Please have a look at the example [test case](https://github.com/damnhandy/Handy-URI-Templates/blob/master/src/test/java/com/damnhandy/uri/template/examples/TestGitHubApis.java) for more details.
-
-Usage with the [Apache HTTP Client](http://hc.apache.org/httpcomponents-client-ga/index.html) is just as similar.
-
-## Supported Value Types
-
-While the `set()` method of the [UriTemplate](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/UriTemplate.html) accepts any Java object, the following Java types are preferred:
-
-* Primitive and Object types such as:
-	* int & Integer
-	* double & Double
-	* char & Character
-	* float & Float
-	* double & Double
-	* short & Short
-	* long & Long
-	* UUID
-	* Enums 
-*  Arrays of the above types
-* `java.util.List<Object>`
-* `java.util.Map<String, Object>`
-* `java.util.Date` Dates will be formatted using the template's default formatter.
-* Anything with a `toString()` method
-
-
-
-Values that are not strings are rendered into the URI by calling its `toString()` method. Java objects can be treated as composite objects (as name/value pairs) when the variable specifies the explode modifier (see Composite Value below). A `char[]` or `Character[]` array will be treated as String. A multi dimensional character array will be treated as a List of Strings.
-
-
-## Unsupported Value Types
-
-The template processor will not accept the following types of value combinations:
-
-* With the exception of character arrays, multi dimensional arrays are not supported.
-* Collections of Collections
-* Maps that have values of type array, Collection, or Map.
-
-If you need such data structures in a URI, consider implementing your own `VarExploder` to handle it.
-
-## Composite Values
-
-The URI Template spec supports [composite values](http://tools.ietf.org/html/rfc6570#section-2.4.2) where the variable may be a list of values of an associative array of (name, value) pairs. The template processor always treats lists as java.util.List and name/value pairs as a java.util.Map. Lists and Maps work with any supported type that is not another List, Map, or array.
-
-## POJOs as Composite Values
-
-The template processor can treat simple Java objects as composite value. When a POJO is set on a template variable and the variable specifies the an explode modifier "*", a [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) is invoked. The purpose of the `VarExploder` is to expose the object properties as name/value pairs.
-
-For most use cases, the [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) should be sufficient. The `DefaultVarExploder` is a VarExploder implementation that takes in a Java object and extracts the properties for use in a URI Template. This class is called by default when a POJO is passed into the UriTemplate and the explode modifier is present on the variable. Given the following URI template expression:
-
-	/mapper{?address*}
-
-And this Java object for an address:
+If you need more control you can instantiate a `JadeConfiguration` object.
 
 ```java
-Address address = new Address();
-address.setState("CA");
-address.setCity("Newport Beach");
-String result = UriTemplate.fromTemplate("/mapper{?address*}")
-                           .set("address", address)
-                           .expand();
+JadeConfiguration config = new JadeConfiguration();
+
+JadeTemplate template = config.getTemplate("index");
+
+Map<String, Object> model = new HashMap<String, Object>();
+model.put("company", "neuland");
+
+config.renderTemplate(template, model);
 ```
 
-The expanded URI will be:
+<a name="api-caching"></a>
+### Caching
 
-	/mapper?city=Newport%20Beach&state=CA
-
-The [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) breaks down the object properties as follows:
-
-* All properties that contain a non-null return value will be included
-* Getters or fields annotated with `@UriTransient` will be excluded
-* By default, the property name is used as the label in the URI. This can be overridden by placing the `@VarName` annotation on the field or getter method and specifying a name.
-* Field level annotations take priority over getter annotations
-* Property names are sorted in the order that they are found in the target class.
-
-Please refer to the JavaDoc for more details on how the `DefaultVarExploder` works.
-
-Should the [DefaultVarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/DefaultVarExploder.html) not be suitable for your needs, custom [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) implementations can be added by rolling your own implementation. A custom VarExploder implementation can be used by wrapping your object in your implementation:
+The `JadeConfiguration` handles template caching for you. If you request the same unmodified template twice you'll get the same instance and avoid unnecessary parsing.
 
 ```java
-UriTemplate.fromTemplate("/mapper{?address*}")
-           .set("address", new MyCustomVarExploder(address))
-           .expand();
+JadeTemplate t1 = config.getTemplate("index.jade");
+JadeTemplate t2 = config.getTemplate("index.jade");
+t1.equals(t2) // true
 ```
 
-Note: All [VarExploder](http://damnhandy.github.com/Handy-URI-Templates/apidocs/com/damnhandy/uri/template/VarExploder.html) implementations are ONLY invoked when the explode modifier "*" is declared in the URI Template expression. If the variable declaration does not specify the explode modifier, an exception is raised.
+You can clear the template and expression cache by calling the following:
 
-License
--------
+```java
+config.clearCache();
+```
 
-   Copyright 2011-2016 Ryan J. McDonough
+For development mode, you can also disable caching completely:
 
-   Licensed under the Apache License, Version 2.0 (the "License");
-   you may not use this file except in compliance with the License.
-   You may obtain a copy of the License at
+```java
+config.setCaching(false);
+```
 
-       http://www.apache.org/licenses/LICENSE-2.0
+<a name="api-output"></a>
+### Output Formatting
 
-   Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
-   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-   See the License for the specific language governing permissions and
-   limitations under the License.
+By default, Jade4J produces compressed HTML without unneeded whitespace. You can change this behaviour by enabling PrettyPrint:
+
+```java
+config.setPrettyPrint(true);
+```
+
+Jade detects if it has to generate (X)HTML or XML code by your specified [doctype](https://github.com/visionmedia/jade#a6-11).
+
+If you are rendering partial templates that don't include a doctype jade4j generates HTML code. You can also set the `mode` manually:
+
+```
+config.setMode(Jade4J.Mode.HTML);   // <input checked>
+config.setMode(Jade4J.Mode.XHTML);  // <input checked="true" />
+config.setMode(Jade4J.Mode.XML);    // <input checked="true"></input>
+```
+
+<a name="api-filters"></a>
+### Filters
+
+Filters allow embedding content like `markdown` or `coffeescript` into your jade template:
+
+    script
+      :coffeescript
+        sayHello -> alert "hello world"
+
+will generate
+
+    <script>
+      sayHello(function() {
+        return alert("hello world");
+      });
+    </script>
+
+jade4j comes with a `plain` and `cdata` filter. `plain` takes your input to pass it directly through, `cdata` wraps your content in `<![CDATA[...]]>`. You can add your custom filters to your configuration.
+
+    config.setFilter("coffeescript", new CoffeeScriptFilter());
+
+To implement your own filter, you have to implement the `Filter` Interface. If your filter doesn't use any data from the model you can inherit from the abstract `CachingFilter` and also get caching for free. See the [neuland/jade4j-coffeescript-filter](https://github.com/neuland/jade4j-coffeescript-filter) project as an example.
+
+<a name="api-helpers"></a>
+### Helpers
+
+If you need to call custom java functions the easiest way is to create helper classes and put an instance into the model.
+
+```java
+public class MathHelper {
+    public long round(double number) {
+        return Math.round(number);
+    }
+}
+```
+
+```java
+model.put("math", new MathHelper());
+```
+
+Note: Helpers don't have their own namespace, so you have to be careful not to overwrite them with other variables.
+
+```
+p= math.round(1.44)
+```
+
+<a name="api-model-defaults"></a>
+### Model Defaults
+
+If you are using multiple templates you might have the need for a set of default objects that are available in all templates.
+
+```java
+Map<String, Object> defaults = new HashMap<String, Object>();
+defaults.put("city", "Bremen");
+defaults.put("country", "Germany");
+defaults.put("url", new MyUrlHelper());
+config.setSharedVariables(defaults);
+```
+
+<a name="api-template-loader"></a>
+### Template Loader
+
+By default, jade4j searches for template files in your work directory. By specifying your own `FileTemplateLoader`, you can alter that behavior. You can also implement the `TemplateLoader` interface to create your own.
+
+```java
+TemplateLoader loader = new FileTemplateLoader("/templates/", "UTF-8");
+config.setTemplateLoader(loader);
+```
+
+<a name="expressions"></a>
+## Expressions
+
+The original jade implementation uses JavaScript for expression handling in `if`, `unless`, `for`, `case` commands, like this
+
+    - var book = {"price": 4.99, "title": "The Book"}
+    if book.price < 5.50 && !book.soldOut
+      p.sale special offer: #{book.title}
+
+    each author in ["artur", "stefan", "michael"]
+      h2= author
+
+As of version 0.3.0, jade4j uses [JEXL](http://commons.apache.org/jexl/) instead of [OGNL](http://en.wikipedia.org/wiki/OGNL) for parsing and executing these expressions.
+
+We decided to switch to JEXL because its syntax and behavior is more similar to ECMAScript/JavaScript and so closer to the original jade.js implementation. JEXL runs also much faster than OGNL. In our benchmark, it showed a **performance increase by factor 3 to 4**.
+
+We are using a slightly modified JEXL version which to have better control of the exception handling. JEXL now runs in a semi-strict mode, where non existing values and properties silently evaluate to `null`/`false` where as invalid method calls lead to a `JadeCompilerException`.
+
+<a name="reserved-words"></a>
+## Reserved Words
+
+JEXL comes with the three builtin functions `new`, `size` and `empty`. For properties with this name the `.` notation does not work, but you can access them with `[]`.
+
+```
+- var book = {size: 540}
+book.size // does not work
+book["size"] // works
+```
+
+You can read more about this in the [JEXL documentation](http://commons.apache.org/proper/commons-jexl/reference/syntax.html#Language_Elements).
+
+<a name="framework-integrations"></a>
+## Framework Integrations
+- [neuland/spring-jade4j](https://github.com/neuland/spring-jade4j) jade4j for Spring.
+- [jooby-jade](https://github.com/jooby-project/jooby/tree/master/jooby-jade) jade4j for [Jooby](http://jooby.org).
+- [vertx-web](http://vertx.io/docs/vertx-web/js/#_jade_template_engine) jade4j for [Vert.X](http://vertx.io/)
+
+<a name="breaking-changes"></a>
+## Breaking Changes
+
+### 1.3.1
+- Fixed a mayor scoping bug in loops. Use this version and not 1.3.0
+
+### 1.3.0
+- setBasePath has been removed from JadeConfiguration. Set folderPath on FileTemplateLoader instead.
+- Scoping of variables in loops changed, so its more in line with jade. This could break your template.
+
+### 1.2.0
+- Breaking change in filter interface: if you use filters outside of the project, they need to be adapted to new interface
+
+### 1.0.0
+In Version 1.0.0 we added a lot of features of JadeJs 1.11. There are also some Breaking Changes:
+- Instead of 'id = 5' you must use '- var id = 5'
+- Instead of 'h1(attributes, class = "test")' you must use 'h1(class= "test")&attributes(attributes)'
+- Instead of '!!! 5' you must use 'doctype html'
+- Jade Syntax for Conditional Comments is not supported anymore
+- Thanks to rzara for contributing to issue-108
+
+<a name="authors"></a>
+## Authors
+
+- Artur Tomas / [atomiccoder](https://github.com/atomiccoder)
+- Stefan Kuper / [planetk](https://github.com/planetk)
+- Michael Geers / [naltatis](https://github.com/naltatis)
+- Christoph Blömer / [chbloemer](https://github.com/chbloemer)
+
+Special thanks to [TJ Holowaychuk](https://github.com/visionmedia) the creator of jade!
+
+<a name="license"></a>
+## License
+
+The MIT License
+
+Copyright (C) 2011-2019 [neuland Büro für Informatik](http://www.neuland-bfi.de/), Bremen, Germany
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

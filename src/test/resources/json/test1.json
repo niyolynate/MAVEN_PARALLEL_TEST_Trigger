@@ -1,4 +1,0 @@
-{
-    "name": "test",
-    "template": "http://example.com/orders/{orderId}{?view}"
-}

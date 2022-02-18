@@ -1,15 +1,12 @@
-dist: trusty
 language: java
+
+dist: trusty
+sudo: required
+cache:
+  directories:
+  - $HOME/.m2
 jdk:
-#  - openjdk7
-#  - oraclejdk7 disabling due to the container not being able to set JAVA_HOME correctly
+  - oraclejdk9
   - oraclejdk8
   - openjdk8
-  - oraclejdk11
-sudo: false
-install: ./mvnw clean
-script: ./mvnw install site
-notifications:
-  email: false
-before_install:
-  - git submodule update --init --recursive
+  - openjdk7
