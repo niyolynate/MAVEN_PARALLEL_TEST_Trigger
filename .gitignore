@@ -1,14 +1,21 @@
+# Generated Files #
+target/
+.settings/
 *.class
-.project
+entityscanner-plug/dependency-reduced-pom.xml
+.DS_Store
+morphia/.DS_Store
+release.properties
+
+.idea
 .classpath
-.settings
-target
+.project
+*.iml
+*.tag
+*.next
+*.releasebackup
+
 # Package Files #
 *.jar
 *.war
 *.ear
-*.iml
-*.ipr
-*.iws
-*.orig
-*.rej
