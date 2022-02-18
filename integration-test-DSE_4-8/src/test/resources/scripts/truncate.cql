@@ -1,1 +1,0 @@
-TRUNCATE TABLE achilles_dse_it.search;

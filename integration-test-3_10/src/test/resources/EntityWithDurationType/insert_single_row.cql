@@ -1,1 +1,0 @@
-INSERT INTO it_3_10.entity_with_duration_type(id, duration) VALUES(${id}, 10h30m10s);

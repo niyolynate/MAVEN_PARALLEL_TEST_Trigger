@@ -1,29 +1,31 @@
-.classpath
-.settings
+# maven ignore
+target/
+*.jar
+*.war
+*.zip
+*.tar
+*.tar.gz
+
+# eclipse ignore
+.settings/
 .project
-target
-bin
-.pmd
-.checkstyle
-.metadata
-*versionsBackup
-*releaseBackup
-release.properties
-*.kdb.lock
-*.orig
-*.iml
-*.log
+.classpath
+
+# idea ignore
+.idea/
 *.ipr
+*.iml
 *.iws
-.idea
-.idea
-*/.idea/*
-*~
-.cache
-.springBeans
-test-output
-target
-target/*
+
+# temp ignore
+*.log
+*.cache
+*.diff
+*.patch
+*.tmp
+
+# system ignore
 .DS_Store
-*.swp
-.java-version
+Thumbs.db
+
+dev/
