@@ -1,100 +1,51 @@
-[![Build Status](https://travis-ci.org/julianhyde/linq4j.png)](https://travis-ci.org/julianhyde/linq4j)
+# The ImageIO-Ext Project
+![GeoSolutions Rocks!](http://3.bp.blogspot.com/_0_xIiXP5xuY/TUGnIbDpcgI/AAAAAAAAAOY/gKhkBdKZcfs/s1600/imageio_jpg_580x320_crop_q85.jpg)
 
-linq4j
-======
+The **ImageIO-Ext** is an Open Source project that provides extensions, fixes and improvements for the standard Oracle Java Image I/O project such as:
 
-A port of LINQ (Language-Integrated Query) to Java.
+1. Support for the [GDAL](http://www.gdal.org/) I/O library
+2. Support for reading/writing JPEG2000 files with [Kakadu](http://www.kakadusoftware.com/)
+3. Improved support for reading/writing tiff files 
+4. A Reader/Writer for JPEG images based on the [libjpeg-turbo](http://libjpeg-turbo.virtualgl.org/) open source high performance library. More info can be found [here](https://github.com/geosolutions-it/imageio-ext/wiki/TurboJPEG-plugin)
+5. A NITF plugin based on [NITRO](http://nitro-nitf.sourceforge.net/wikka.php?wakka=HomePage). More info can be found [here](https://github.com/geosolutions-it/imageio-ext/wiki/NITF-plugin)
+6. A new PNG Writer with improved performances. More informations can be found [here](https://github.com/geosolutions-it/imageio-ext/wiki/PNG-plugin).
 
-Download
-========
+The ImageIO library provides support for encoding/decoding raster formats in Java. Some useful documentation on ImageIO can be found [here](http://docs.oracle.com/javase/1.4.2/docs/guide/imageio/spec/imageio_guideTOC.fm.html).
 
-    $ git clone git://github.com/julianhyde/linq4j.git linq4j
+See the documentation below for more information on the ImageIO-Ext project.
 
-Build and test
-==============
+# Releases and Downloads
+Current stable release is **[1.3.2](http://demo.geo-solutions.it/share/github/imageio-ext/releases/1.3.X/1.3.2/)**. Check [this page](https://github.com/geosolutions-it/imageio-ext/wiki/Releases) for additional information on how to download artifacts and binaries.
 
-    $ mvn package
 
-Backlog
-=======
+# Getting Support
+## Mailing List
+We have created two public mailing lists for ImageIO-Ext one for Developers and one for Users, you can find their homepages here below:
 
-If you would like to contribute, here are some of the tasks we have planned.
-Please let us know if you are starting one.
+* [**ImageIO-Ext Users Group**](https://groups.google.com/d/forum/imageio-ext-users)
+* [**ImageIO-Ext Developers Group**](https://groups.google.com/d/forum/imageio-ext-developers)
 
-* Implement and test the methods allowing queries on Enumerables. The methods
-  are specified in ExtendedEnumerable, DefaultEnumerable calls the
-  implementations in Extensions. We'll do these in tranches. Each time you
-  implement a method, add a test similar to Linq4jTest.testWhere.
-  Try to refactor out some helper (named inner) classes, rather than creating
-  2 or 3 anonymous classes per method.
+# Contributing
+We welcome contributions in any form:
 
-* Third tranche: implement groupBy for Enumerable.
+* pull requests for new features
+* pull requests for bug fixes
+* pull requests for documentation
+* funding for any combination of the above
 
-* Fourth tranche: implement any, all, aggregate, sum, min, max, average
-  for Enumerable.
+# Working with ImageIO-Ext
+Here below you can find links with useful information for working with ImageIO-Ext.
 
-* Sixth tranche: implement union, intersect, except, distinct methods
-  for Enumerable.
+* [Documentation](https://github.com/geosolutions-it/imageio-ext/wiki/Documentation)
+* [Releases](https://github.com/geosolutions-it/imageio-ext/wiki/Releases)
+* [Working with Maven](https://github.com/geosolutions-it/imageio-ext/wiki/Working-with-Maven)
+* [Continuous Build](https://github.com/geosolutions-it/imageio-ext/wiki/ContinuosIntegration)
 
-* Seventh tranche: first, last, defaultIfEmpty, elementAtOrDefault,
-  firstOrDefault, lastOrDefault for Enumerable. May need to add a class
-  parameter so that we can generate the right default value.
+# Important Notice
+**In case you want to enable ECW Decode support, it is mandatory you agree with the ECW Eula. Moreover if you want to support ECW Decode in a Server application you need to BUY a license from ERDAS.**
 
-* Eighth tranche: implement orderBy, reverse for Enumerable.
+# License
+**ImageIO-Ext** is released partly under [LGPL](https://github.com/geosolutions-it/imageio-ext/blob/master/LICENSE.txt) license partly under the [BSD](https://github.com/geosolutions-it/imageio-ext/blob/master/plugin/tiff/LICENSE.txt) license (namely, derivative work from imageio source code). Refer to the code tree for more information.
 
-* Ninth tranche: implement methods that require EqualityComparer.
-
-* Last tranche: all remaining methods for Enumerable.
-
-* Parser support. Either modify a Java parser (e.g. OpenJDK), or write a
-  pre-processor. Generate Java code that includes expression trees.
-
-* Port Enumerable and Queryable to Scala. Change classes (in particular,
-  collections and function types) so that user code is looks like concise,
-  native Scala. Share as much of the back-end as possible with linq4j, but
-  don't compromise the Scala look-and-feel of the front-end. Use adapters
-  (and sacrifice a bit of performance) if it helps.
-
-* Write a simple LINQ-to-SQL provider. This would generate SQL and get data
-  from JDBC. It's a prototype, demonstrating that we can connect the dots.
-  Plan to throw it away.
-
-* In the prototype LINQ-to-SQL provider, write a simple rule to recognize a
-  select list and where clause and push them down to SQL.
-
-* Test Scala front-end against LINQ-to-SQL provider.
-
-* A better provider using a planner framework.
-
-* JDBC driver on top of linq4j (not necessarily on top of the
-  Queryable/Expression object model; more likely on the query model that this
-  translates to).
-
-* Use planner framework to build back-ends to non-SQL data sources (e.g.
-  MongoDB, Hadoop, text files).
-
-Already implemented
-===================
-
-Methods on Enumerable:
-* select, selectMany, where, groupJoin, join;
-* count, longCount;
-* cast, ofType;
-* toMap, toLookup, skip, skipWhile, take, takeWhile.
-
-Methods on Queryable:
-* where, whereN
-* skip, skipWhile, skipWhileN, take, takeWhile, takeWhileN.
-
-(Except methods that involve EqualityComparer.)
-
-More information
-================
-
-* License: Apache License, Version 2.0.
-* Author: Julian Hyde
-* Blog: http://julianhyde.blogspot.com
-* Project page: http://www.hydromatic.net/linq4j
-* Source code: http://github.com/julianhyde/linq4j
-* Developers list: http://groups.google.com/group/linq4j-dev
-* <a href="HISTORY.md">Release notes and history</a>
+## Professional Support
+ImageIO-EXT has been developed by [**GeoSolutions**](http://www.geo-solutions.it) as an internal effort to provide extensions, fixes and improvements for the standard Oracle Java Image I/O project 
