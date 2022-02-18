@@ -1,10 +1,36 @@
-build/
-hive/build/
-json/javadoc/
-spatial-sdk-hadoop.jar
-hive/spatial-sdk-hive.jar
-json/spatial-sdk-json.jar
-hive/target
-json/target
+# Compiled source #
+###################
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# Build tool #
+##############
+target
 .idea
 *.iml
+*.im
+*.ipr
+*.iws
+.settings
+.project
+.classpath
+
+# OS generated files #
+######################
+*~
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+
+activemq-data
+*.epoch
+*.log
