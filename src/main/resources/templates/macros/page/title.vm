@@ -1,9 +1,0 @@
-#macro(includeTitle, $reportName)
-
-#set($buildNo = "")
-#if($build_number)
-  #set($buildNo = "(no $build_number)")
-#end
-<title>Cucumber Reports $buildNo - $reportName</title>
-
-#end
