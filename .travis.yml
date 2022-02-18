@@ -1,6 +1,18 @@
-sudo: false
 language: java
 jdk:
+  - openjdk-ea
+  - openjdk17
   - openjdk11
+  - openjdk8
+
+matrix:
+  fast_finish: true
+  allow_failures:
+    - jdk: openjdk-ea
+
 after_success:
-  - bash <(curl -s https://codecov.io/bash)
+  - mvn clean test jacoco:report-aggregate coveralls:report
+
+cache:
+  directories:
+  - $HOME/.m2

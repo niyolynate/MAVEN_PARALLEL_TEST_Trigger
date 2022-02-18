@@ -1,9 +1,15 @@
+target/
+/jsign-gradle-plugin/.gradle
+/jsign-gradle-plugin/build
+dependency-reduced-pom.xml
+
+# IntelliJ files
+*.iml
+*.ipr
+*.iws
+/.idea
+
+# eclipse files
+.settings
 .classpath
 .project
-.settings/
-.cache
-.idea/
-*.iml
-target/
-mediawiki/
-bin/
