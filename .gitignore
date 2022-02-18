@@ -1,10 +1,9 @@
-.project
 .classpath
-.settings
-.idea
-.DS_Store
-target
-*.patch
-*.class
-*.pyc
+.project
+.settings/
+.cache
+.idea/
 *.iml
+target/
+mediawiki/
+bin/

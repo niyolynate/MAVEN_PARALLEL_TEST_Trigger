@@ -1,14 +1,6 @@
 sudo: false
-cache:
-  directories:
-    - "$HOME/.m2"
 language: java
 jdk:
-  - oraclejdk8
-script:
-  - mvn -U clean install -Dall -Djava.awt.headless=true -DskipTests=false
-notifications:
-  email: false
-  on_failure: never
-env: GDAL_LIBRARY_NAME=disabled_see_geot-4733
-dist: trusty
+  - openjdk11
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
