@@ -1,134 +1,110 @@
-![Universal G-Code Sender](https://raw.githubusercontent.com/winder/Universal-G-Code-Sender/master/ugs-platform/branding/src/main/nbm-branding/core/core.jar/org/netbeans/core/startup/splash.gif "UGS Splash Image")
+[![Travis Status](https://img.shields.io/travis/com/damianszczepanik/cucumber-reporting/master.svg?label=Travis%20build)](https://travis-ci.com/github/damianszczepanik/cucumber-reporting)
+[![AppVeyor Status](https://img.shields.io/appveyor/ci/damianszczepanik/cucumber-reporting/master.svg?label=AppVeyor%20build)](https://ci.appveyor.com/project/damianszczepanik/cucumber-reporting/history)
+[![Shippable Status](https://img.shields.io/shippable/5844689c9d1f3e0f0057631a/master.svg?label=Shippable%20build)](https://app.shippable.com/projects/5844689c9d1f3e0f0057631a)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Online-blue.svg)](http://damianszczepanik.github.io/cucumber-html-reports/overview-features.html)
 
-[![Last commit](https://img.shields.io/github/last-commit/winder/Universal-G-Code-Sender.svg?maxAge=1800)](https://github.com/winder/Universal-G-Code-Sender/commits/master)
-[![Build Status](https://app.travis-ci.com/winder/Universal-G-Code-Sender.svg?branch=master)](https://app.travis-ci.com/github/winder/Universal-G-Code-Sender)
-[![Codebeat badge](https://codebeat.co/badges/48cc1265-2f6b-4163-8a8a-964acc073100)](https://codebeat.co/projects/github-com-winder-universal-g-code-sender-master)
-[![Releases](https://img.shields.io/github/v/release/winder/Universal-G-Code-Sender)](https://github.com/winder/Universal-G-Code-Sender/releases)
+[![Coverage Status](https://codecov.io/gh/damianszczepanik/cucumber-reporting/branch/master/graph/badge.svg?label=Unit%20tests%20coverage)](https://codecov.io/github/damianszczepanik/cucumber-reporting)
+[![Sonarqube Status](https://sonarcloud.io/api/project_badges/measure?project=damianszczepanik_cucumber-reporting&metric=alert_status)](https://sonarcloud.io/dashboard?id=damianszczepanik_cucumber-reporting)
+[![Codacy](https://api.codacy.com/project/badge/grade/7f206992ed364f0896490057fdbdaa2e)](https://www.codacy.com/app/damianszczepanik/cucumber-reporting)
+[![Codebeat](https://codebeat.co/badges/cb097d5a-280a-4867-8120-d6f03a874861)](https://codebeat.co/projects/github-com-damianszczepanik-cucumber-reporting)
+[![Vulnerabilities](https://snyk.io/test/github/damianszczepanik/cucumber-reporting/badge.svg)](https://snyk.io/org/damianszczepanik/project/6a2fe301-d56c-49e7-8c78-cd3ff09c3828)
 
-Universal G-Code Sender is a Java based, cross platform G-Code sender, compatible with [GRBL](https://github.com/gnea/grbl/), [TinyG](https://github.com/synthetos/TinyG), [g2core](https://github.com/synthetos/g2) and [Smoothieware](http://smoothieware.org/).
+[![Maven Central](https://img.shields.io/maven-central/v/net.masterthought/cucumber-reporting.svg)](http://search.maven.org/#search|gav|1|g%3A%22net.masterthought%22%20AND%20a%3A%22cucumber-reporting%22)
+[![License](https://img.shields.io/badge/license-GNU%20LGPL%20v2.1-blue.svg)](https://raw.githubusercontent.com/damianszczepanik/cucumber-reporting/master/LICENCE)
+[![Contributors](https://img.shields.io/github/contributors/damianszczepanik/cucumber-reporting.svg)](https://github.com/damianszczepanik/cucumber-reporting/graphs/contributors)
 
-Online documentation and releases: http://winder.github.io/ugs_website/<br/>
-Discussion forum: https://groups.google.com/forum/#!forum/universal-gcode-sender
+# Publish pretty [cucumber](https://cucumber.io/) reports
 
-Technical details:
+This is a Java report publisher primarily created to publish cucumber reports on the Jenkins build server.
+It publishes pretty html reports with charts showing the results of cucumber runs. It has been split out into a standalone package so it can be used for Jenkins and maven command line as well as any other packaging that might be useful. Generated report has no dependency so can be viewed offline.
 
-* [JSSC](https://github.com/scream3r/java-simple-serial-connector) or [JSerialComm](https://github.com/Fazecast/jSerialComm) for serial communication
-* [JogAmp](https://jogamp.org/) for OpenGL
-* Built with [Netbeans Platform](https://netbeans.org/features/platform/)
-* Developed with NetBeans 8.0.2 or later
+## Background
 
-## Downloads
-Below you will find the latest release of UGS.<br/> For older releases please visit the [releases page](https://github.com/winder/Universal-G-Code-Sender/releases).
+Cucumber is a test automation tool following the principles of Behavioural Driven Design and living documentation. Specifications are written in a concise human readable form and executed in continuous integration.
 
-**UGS Platform**<br>
-The next generation, feature packed variant based on the Netbeans Platform.<br>
-Unpack and start the program ```bin/ugsplatform```
+This project allows you to publish the results of a cucumber run as pretty html reports. In order for this to work you must generate a cucumber json report. The project converts the json report into an overview html linking to separate feature files with stats and results.
 
-| Latest release (v2.0.9) | Previous release (v2.0.8) | Nightly build  |
-|:------------------------|:---------------|:--------------|
-| [![Windows](pictures/os_windows.png) Windows](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app-win.zip)           | [![Windows](pictures/os_windows.png) Windows](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app-win.zip)           | [![Windows](pictures/os_windows.png) Windows](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app-win.zip)  |
-| [![Mac OSX](pictures/os_mac.png) Mac OSX](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app-ios.dmg)               | [![Mac OSX](pictures/os_mac.png) Mac OSX](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app-ios.dmg)               | [![Mac OSX](pictures/os_mac.png) Mac OSX](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app-ios.dmg) |
-| [![Linux x64](pictures/os_linux.png) Linux](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app-linux.tar.gz)        | [![Linux x64](pictures/os_linux.png) Linux](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app-linux.tar.gz)        | [![Linux x64](pictures/os_linux.png) Linux](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app-linux.tar.gz) |
-| [![Linux ARM](pictures/os_linux_arm.png) RaspberryPI](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app-pi.tar.gz) | [![Linux ARM](pictures/os_linux_arm.png) RaspberryPI](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app-pi.tar.gz) | [![Linux ARM](pictures/os_linux_arm.png) RaspberryPI](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app-pi.tar.gz) |
-| [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app.zip)                    | [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app.zip)                    | [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app.zip) |
+## Install
 
-**UGS Classic**<br>
-A clean and lightweight variant of UGS (requires [Java](https://java.com/en/download/manual.jsp)). <br>
-Unpack and start the program by double clicking the jar file. On some platforms you may need to run the included start script. <br>
-
-| Latest release (v2.0.9) | Previous release (v2.0.8) | Nightly build  |
-|:---------------|:---------------|:--------------|
-| [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/v2.0.9/UniversalGcodeSender.zip) | [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/v2.0.8/UniversalGcodeSender.zip) | [![Zip](pictures/zip.png) All platforms](http://bit.ly/2HhJIir) |
-
-
-## Screenshots
-
-### UGS Platform
-
-UGS Platform main window
-
-![UGS Platform](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_ugs_platform.png "UGS Platform")
-
-Customizable panel layout
-
-![Customizable panel layout](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_customizable_panels.png "Customizable panel layout")
-
-Menu actions with customizable keybindings
-
-![Actions](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_actions_menu.png "Actions")
-
-Menu with plugins
-
-![Plugins](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_plugins_menu.png "Plugins")
-
-One of many plugins
-
-![Dowel Maker](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_dowel_maker_plugin.png "Dowel maker plugin")
-
-Basic gcode editor
-
-![Basic gcode editor](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_editor.png "Basic gcode editor")
-
-### UGS Classic
-
-UGS Classic main window
-
-![Classic main window](https://winder.github.io/ugs_website/img/screenshots/finished.png)
-
-UGS Classic with visualizer
-
-![Classic visualizer](https://winder.github.io/ugs_website/img/screenshots/visualizer.png)
-
-## Development
-
-For development the [Maven](http://maven.apache.org) build tool is used.
-
-#### Start the application
-
-UGS Classic: 
-```bash
-mvn install
-mvn exec:java -Dexec.mainClass="com.willwinder.universalgcodesender.MainWindow" -pl ugs-core
+Add a maven dependency to your pom
+```xml
+<dependency>
+    <groupId>net.masterthought</groupId>
+    <artifactId>cucumber-reporting</artifactId>
+    <version>(check version above)</version>
+</dependency>
 ```
 
-UGS Platform: 
-```bash
-mvn install
-mvn nbm:run-platform -pl ugs-platform/application
+Read this if you need further [detailed configuration](https://github.com/jenkinsci/cucumber-reports-plugin/wiki/Detailed-Configuration) instructions for using the Jenkins version of this project
+
+## Usage
+```Java
+File reportOutputDirectory = new File("target");
+List<String> jsonFiles = new ArrayList<>();
+jsonFiles.add("cucumber-report-1.json");
+jsonFiles.add("cucumber-report-2.json");
+
+String buildNumber = "1";
+String projectName = "cucumberProject";
+
+Configuration configuration = new Configuration(reportOutputDirectory, projectName);
+// optional configuration - check javadoc for details
+configuration.addPresentationModes(PresentationMode.RUN_WITH_JENKINS);
+// do not make scenario failed when step has status SKIPPED
+configuration.setNotFailingStatuses(Collections.singleton(Status.SKIPPED));
+configuration.setBuildNumber(buildNumber);
+// addidtional metadata presented on main page
+configuration.addClassifications("Platform", "Windows");
+configuration.addClassifications("Browser", "Firefox");
+configuration.addClassifications("Branch", "release/1.0");
+
+// optionally add metadata presented on main page via properties file
+List<String> classificationFiles = new ArrayList<>();
+classificationFiles.add("properties-1.properties");
+classificationFiles.add("properties-2.properties");
+configuration.addClassificationFiles(classificationFiles);
+
+// optionally specify qualifiers for each of the report json files
+        configuration.addPresentationModes(PresentationMode.PARALLEL_TESTING);
+        configuration.setQualifier("cucumber-report-1","First report");
+        configuration.setQualifier("cucumber-report-2","Second report");
+
+        ReportBuilder reportBuilder=new ReportBuilder(jsonFiles,configuration);
+        Reportable result=reportBuilder.generateReports();
+// and here validate 'result' to decide what to do if report has failed
 ```
+There is a feature overview page:
 
+![feature overview page](./.README/feature-overview.png)
 
-#### Execute all tests
+And there are also feature specific results pages:
 
-```bash
-mvn test
-```
+![feature specific page passing](./.README/feature-passed.png)
 
+And useful information for failures:
 
-#### Building the self-executing JAR
+![feature specific page passing](./.README/feature-failed.png)
 
-```bash
-mvn install
-mvn package -pl ugs-core
-```
+If you have tags in your cucumber features you can see a tag overview:
 
+![Tag overview](./.README/tag-overview.png)
 
-#### Build a UniversalGcodeSender.zip release file
+And you can drill down into tag specific reports:
 
-```bash
-mvn package assembly:assembly
-```
+![Tag report](./.README/tag-report.png)
 
-#### Develop via IntelliJ
+![Trends report](./.README/trends.png)
 
-If you are more used to IntelliJ, you can also build, run and debug it there.
+## Continuous delivery and live demo
 
-- Run  `mvn nbm:run-platform -pl ugs-platform/application` once via terminal to build everything
-- Import the Source, `File` -> `New` -> `Project from existing Sources`
-- Setup a new "Run Configuration", `Java Application`, with following settings:
-  - Main Class: `org.netbeans.Main`
-  - VM Options: `-Dnetbeans.user=$ProjectFileDir$/ugs-platform/application/target/userdir -Dnetbeans.home=$ProjectFileDir$/ugs-platform/application/target/ugsplatform/platform -Dnetbeans.logger.console=true -Dnetbeans.indexing.noFileRefresh=true -Dnetbeans.dirs="$ProjectFileDir$/ugs-platform/application/target/ugsplatform/ugsplatform:$ProjectFileDir$/ugs-platform/application/target/ugsplatform/platform:$ProjectFileDir$/ugs-platform/application/target/ugsplatform/ide:$ProjectFileDir$/ugs-platform/application/target/ugsplatform/extra:$ProjectFileDir$/ugs-platform/application/target/ugsplatform/java"`
-  - Program arguments: `--branding ugsplatform`
-  - Working dir: `$ProjectFileDir$`
-  - Use classpath of module: `ugs-platform-app` 
-- There is a [runConfiguration](.idea/runConfigurations/UGS_Platform.xml) in the repository, which should be available after importing the project
+You can play with the [live demo](http://damianszczepanik.github.io/cucumber-html-reports/overview-features.html) report before you decide if this is worth to use. Report is generated every time new change is merged into the main development branch so it always refers to the most recent version of this project. Sample configuration is provided by [sample code](./src/test/java/LiveDemoTest.java).
+
+## Code quality
+
+Once you developed your new feature or improvement you should test it by providing several unit or integration tests.
+
+![codecov.io](https://codecov.io/gh/damianszczepanik/cucumber-reporting/branch/master/graphs/tree.svg)
+
+## Contribution
+
+Interested in contributing to the cucumber-reporting?  Great!  Start [here](https://github.com/damianszczepanik/cucumber-reporting).
