@@ -1,116 +1,103 @@
-# Datastax Java Driver for Apache Cassandra®
+<img src="https://github.com/dianping/cat/raw/master/cat-home/src/main/webapp/images/logo/cat_logo03.png" width="50%">
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.datastax.oss/java-driver-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.datastax.oss/java-driver-core)
+**CAT**
+ [![GitHub stars](https://img.shields.io/github/stars/dianping/cat.svg?style=social&label=Star&)](https://github.com/dianping/cat/stargazers)
+ [![GitHub forks](https://img.shields.io/github/forks/dianping/cat.svg?style=social&label=Fork&)](https://github.com/dianping/cat/fork)
 
-*If you're reading this on github.com, please note that this is the readme for the development 
-version and that some features described here might not yet have been released. You can find the
-documentation for latest version through [DataStax Docs] or via the release tags, e.g. 
-[4.13.0](https://github.com/datastax/java-driver/tree/4.13.0).*
+### CAT 简介 
 
-A modern, feature-rich and highly tunable Java client library for [Apache Cassandra®] \(2.1+) and 
-[DataStax Enterprise] \(4.7+), and [DataStax Astra], using exclusively Cassandra's binary protocol
-and Cassandra Query Language (CQL) v3.
+- CAT 是基于 Java 开发的实时应用监控平台，为美团点评提供了全面的实时监控告警服务。
+- CAT 作为服务端项目基础组件，提供了 Java, C/C++, Node.js, Python, Go 等多语言客户端，已经在美团点评的基础架构中间件框架（MVC框架，RPC框架，数据库框架，缓存框架等，消息队列，配置系统等）深度集成，为美团点评各业务线提供系统丰富的性能指标、健康状况、实时告警等。
+- CAT 很大的优势是它是一个实时系统，CAT 大部分系统是分钟级统计，但是从数据生成到服务端处理结束是秒级别，秒级定义是48分钟40秒，基本上看到48分钟38秒数据，整体报表的统计粒度是分钟级；第二个优势，监控数据是全量统计，客户端预计算；链路数据是采样计算。
 
-[DataStax Docs]: http://docs.datastax.com/en/developer/java-driver/
-[Apache Cassandra®]: http://cassandra.apache.org/
-[DataStax Enterprise]: https://www.datastax.com/products/datastax-enterprise
-[DataStax Astra]: https://www.datastax.com/products/datastax-astra
+### Cat 产品价值
 
-## Getting the driver
+- 减少故障发现时间
+- 降低故障定位成本
+- 辅助应用程序优化
 
-The driver artifacts are published in Maven central, under the group id [com.datastax.oss]; there
-are multiple modules, all prefixed with `java-driver-`.
+### Cat 优势
 
-```xml
-<dependency>
-  <groupId>com.datastax.oss</groupId>
-  <artifactId>java-driver-core</artifactId>
-  <version>${driver.version}</version>
-</dependency>
+- 实时处理：信息的价值会随时间锐减，尤其是事故处理过程中
+- 全量数据：全量采集指标数据，便于深度分析故障案例
+- 高可用：故障的还原与问题定位，需要高可用监控来支撑
+- 故障容忍：故障不影响业务正常运转、对业务透明
+- 高吞吐：海量监控数据的收集，需要高吞吐能力做保证
+- 可扩展：支持分布式、跨 IDC 部署，横向扩展的监控系统
 
-<dependency>
-  <groupId>com.datastax.oss</groupId>
-  <artifactId>java-driver-query-builder</artifactId>
-  <version>${driver.version}</version>
-</dependency>
+### 更新日志
 
-<dependency>
-  <groupId>com.datastax.oss</groupId>
-  <artifactId>java-driver-mapper-runtime</artifactId>
-  <version>${driver.version}</version>
-</dependency>
-```
+- [**最新版本特性一览**](https://github.com/dianping/cat/wiki/new)
 
-Note that the query builder is now published as a separate artifact, you'll need to add the
-dependency if you plan to use it.
+    - 注意cat的3.0代码分支更新都发布在master上，包括最新文档也都是这个分支
+    - 注意文档请用最新master里面的代码文档作为标准，一些开源网站上面一些老版本的一些配置包括数据库等可能遇到不兼容情况，请以master代码为准，这份文档都是美团点评内部同学为这个版本统一整理汇总。内部同学已经核对，包括也验证过，如果遇到一些看不懂，或者模糊的地方，欢迎提交PR。
+    - 多语言客户端：Java、C/C++、Node.js、Python、Go [传送门](https://github.com/dianping/cat/tree/master/lib)
+        
+        * [**Java**](https://github.com/dianping/cat/blob/master/lib/java)
+        * [**C**](https://github.com/dianping/cat/blob/master/lib/c)
+        * [**C++**](https://github.com/dianping/cat/blob/master/lib/cpp)
+        * [**Python**](https://github.com/dianping/cat/blob/master/lib/python)
+        * [**Go**](https://github.com/dianping/cat/blob/master/lib/go)
+        * [**Node.js**](https://github.com/dianping/cat/blob/master/lib/node.js)
+        
+    - 消息采样聚合
+    - 序列化协议升级
+    - 全新文件存储引擎
+   
 
-Refer to each module's manual for more details ([core](manual/core/), [query
-builder](manual/query_builder/), [mapper](manual/mapper)).
+### 监控模型：
 
-[com.datastax.oss]: http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.datastax.oss%22
+支持 Transaction、Event、Heartbeat、Metric 四种消息模型。 [**模型设计**](https://github.com/dianping/cat/wiki/model)
 
-## Compatibility
+### 模块简介
 
-The driver is compatible with Apache Cassandra® 2.1 and higher, DataStax Enterprise 4.7 and
-higher, and DataStax Astra.
+#### 功能模块
 
-It requires Java 8 or higher.
+- cat-client: 客户端，上报监控数据
+- cat-consumer: 服务端，收集监控数据进行统计分析，构建丰富的统计报表
+- cat-alarm: 实时告警，提供报表指标的监控告警
+- cat-hadoop: 数据存储，logview 存储至 Hdfs
+- cat-home: 管理端，报表展示、配置管理等
 
-Disclaimer: Some DataStax/DataStax Enterprise products might partially work on big-endian systems,
-but DataStax does not officially support these systems.
+> 1. 根目录下 cat-client 模块以后不再维护，下个大版本更新计划移除。新版Java客户端参考：lib/java
+> 2. 管理端、服务端、告警服务均使用 cat-home 模块部署即可
 
-## Connecting to DataStax Astra
+#### 其他模块
 
-The driver comes with built-in support for Astra, DataStax's cloud-native Cassandra-as-a-service
-offering. See the dedicated [manual page](manual/cloud/) for more details.
+- integration：cat和一些第三方工具集成的内容（此部分一部分是由社区贡献，一部分官方贡献）
+- lib：CAT 的客户端，包括 Java、C/C++、Python、Node.js、Go
+- script：CAT 数据库脚本
 
-## Migrating from previous versions
+### Quick Start
 
-Java driver 4 is **not binary compatible** with previous versions. However, most of the concepts
-remain unchanged, and the new API will look very familiar to 2.x and 3.x users.
+- [部署FAQ](https://github.com/dianping/cat/wiki/cat_faq)
 
-See the [upgrade guide](upgrade_guide/) for details.
+#### 服务端
 
-## Useful links
+- [集群部署](https://github.com/dianping/cat/wiki/readme_server)
+- [报表介绍](https://github.com/dianping/cat/wiki/readme_report)
+- [配置手册](https://github.com/dianping/cat/wiki/readme_config)
 
-* [Manual](manual/)
-* [API docs]
-* Bug tracking: [JIRA]
-* [Mailing list]
-* Twitter: [@dsJavaDriver] tweets Java driver releases and important announcements (low frequency).
-    [@DataStaxEng] has more news, including other drivers, Cassandra, and DSE.
-* [Changelog]
-* [FAQ]
+### 项目设计
 
-[API docs]: https://docs.datastax.com/en/drivers/java/4.13
-[JIRA]: https://datastax-oss.atlassian.net/browse/JAVA
-[Mailing list]: https://groups.google.com/a/lists.datastax.com/forum/#!forum/java-driver-user
-[@dsJavaDriver]: https://twitter.com/dsJavaDriver
-[@DataStaxEng]: https://twitter.com/datastaxeng
-[Changelog]: changelog/
-[FAQ]: faq/
+- [项目架构](https://github.com/dianping/cat/wiki/overall)
+- [客户端设计](https://github.com/dianping/cat/wiki/client)
+- [服务端设计](https://github.com/dianping/cat/wiki/server)
+- [模型设计](https://github.com/dianping/cat/wiki/model)
 
-## License
+### Copyright and License
 
-&copy; DataStax, Inc.
+[Apache 2.0 License.](/LICENSE)
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+### CAT 接入公司
 
-http://www.apache.org/licenses/LICENSE-2.0
+![Alt text](cat-home/src/main/webapp/images/logo/companys.png)
 
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
+更多接入公司，欢迎在 <https://github.com/dianping/cat/issues/753> 登记
 
-----
+### 联系我们
 
-DataStax is a registered trademark of DataStax, Inc. and its subsidiaries in the United States 
-and/or other countries.
+我们需要知道你对Cat的一些看法以及建议：
 
-Apache Cassandra, Apache, Tomcat, Lucene, Solr, Hadoop, Spark, TinkerPop, and Cassandra are 
-trademarks of the [Apache Software Foundation](http://www.apache.org/) or its subsidiaries in
-Canada, the United States and/or other countries. 
+- Mail: cat@dianping.com，
+- [**Issues**](https://github.com/dianping/cat/issues)
