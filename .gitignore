@@ -1,31 +1,29 @@
-# Maven build output
-target
-bin
-
-# Eclipse project settings
+.classpath
 .settings
 .project
-.classpath
-.factorypath
-/.apt_generated/
-/.apt_generated_tests/
-
-# IntelliJ IDEA project settings (old and new)
+target
+bin
+.pmd
+.checkstyle
+.metadata
+*versionsBackup
+*releaseBackup
+release.properties
+*.kdb.lock
+*.orig
 *.iml
-.idea
-
-# VS Code files
-.vscode
-
-# vi temporary files
-*.swp
-
-# log files, such as JVM crash files
 *.log
-
-
-# vscode project settings
-.factorypath
-
-# Exclude *.env files except default .env
-?*.env
+*.ipr
+*.iws
+.idea
+.idea
+*/.idea/*
+*~
+.cache
+.springBeans
+test-output
+target
+target/*
+.DS_Store
+*.swp
+.java-version
