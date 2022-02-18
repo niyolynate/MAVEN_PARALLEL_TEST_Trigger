@@ -1,3 +1,5 @@
-[submodule "lib/go.v2"]
-	path = lib/go.v2
-	url = https://github.com/Meituan-Dianping/cat-go.git
+[submodule "wiki"]
+    path = wiki
+    url = https://github.com/AddstarMC/Minigames.wiki
+    pushurl = git@github.com:AddstarMC/Minigames.wiki
+
