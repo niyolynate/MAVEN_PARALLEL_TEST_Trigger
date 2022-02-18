@@ -1,378 +1,134 @@
-Pinyin Analysis for Elasticsearch
-==================================
+![Universal G-Code Sender](https://raw.githubusercontent.com/winder/Universal-G-Code-Sender/master/ugs-platform/branding/src/main/nbm-branding/core/core.jar/org/netbeans/core/startup/splash.gif "UGS Splash Image")
 
-This Pinyin Analysis plugin is used to do conversion between Chinese characters and Pinyin, integrates NLP tools (https://github.com/NLPchina/nlp-lang).
+[![Last commit](https://img.shields.io/github/last-commit/winder/Universal-G-Code-Sender.svg?maxAge=1800)](https://github.com/winder/Universal-G-Code-Sender/commits/master)
+[![Build Status](https://app.travis-ci.com/winder/Universal-G-Code-Sender.svg?branch=master)](https://app.travis-ci.com/github/winder/Universal-G-Code-Sender)
+[![Codebeat badge](https://codebeat.co/badges/48cc1265-2f6b-4163-8a8a-964acc073100)](https://codebeat.co/projects/github-com-winder-universal-g-code-sender-master)
+[![Releases](https://img.shields.io/github/v/release/winder/Universal-G-Code-Sender)](https://github.com/winder/Universal-G-Code-Sender/releases)
 
-    --------------------------------------------------
-    | Pinyin Analysis Plugin        | Elasticsearch  |
-    --------------------------------------------------
-    | master                        | 7.x -> master  |
-    --------------------------------------------------
-    | 6.x                           | 6.x            |
-    --------------------------------------------------  
-    | 5.x                           | 5.x            |
-    --------------------------------------------------  
-    | 1.8.1                         | 2.4.1          |
-    --------------------------------------------------  
-    | 1.7.5                         | 2.3.5          |
-    --------------------------------------------------  
-    | 1.6.1                         | 2.2.1          |
-    --------------------------------------------------
-    | 1.5.0                         | 2.1.0          |
-    --------------------------------------------------
-    | 1.4.0                         | 2.0.x          |
-    --------------------------------------------------
-    | 1.3.0                         | 1.6.x          |
-    --------------------------------------------------
-    | 1.2.2                         | 1.0.x          |
-    --------------------------------------------------
+Universal G-Code Sender is a Java based, cross platform G-Code sender, compatible with [GRBL](https://github.com/gnea/grbl/), [TinyG](https://github.com/synthetos/TinyG), [g2core](https://github.com/synthetos/g2) and [Smoothieware](http://smoothieware.org/).
 
-The plugin includes analyzer: `pinyin` ,  tokenizer: `pinyin` and  token-filter:  `pinyin`.
+Online documentation and releases: http://winder.github.io/ugs_website/<br/>
+Discussion forum: https://groups.google.com/forum/#!forum/universal-gcode-sender
 
-** Optional Parameters ** 
-* `keep_first_letter` when this option enabled,  eg: `刘德华`>`ldh`, default: true
-* `keep_separate_first_letter` when this option enabled, will keep first letters separately,  eg: `刘德华`>`l`,`d`,`h`, default: false, NOTE: query result maybe too fuzziness due to term too frequency
-* `limit_first_letter_length` set max length of the first_letter result, default: 16
-* `keep_full_pinyin` when this option enabled, eg: `刘德华`> [`liu`,`de`,`hua`], default: true
-* `keep_joined_full_pinyin` when this option enabled, eg: `刘德华`> [`liudehua`], default: false
-* `keep_none_chinese` keep non chinese letter or number in result, default: true
-* `keep_none_chinese_together` keep non chinese letter together, default: true, eg: `DJ音乐家` -> `DJ`,`yin`,`yue`,`jia`, when set to `false`, eg: `DJ音乐家` -> `D`,`J`,`yin`,`yue`,`jia`, NOTE: `keep_none_chinese` should be enabled first
-* `keep_none_chinese_in_first_letter` keep non Chinese letters in first letter, eg: `刘德华AT2016`->`ldhat2016`, default: true
-* `keep_none_chinese_in_joined_full_pinyin` keep non Chinese letters in joined full pinyin, eg: `刘德华2016`->`liudehua2016`, default: false
-* `none_chinese_pinyin_tokenize` break non chinese letters into separate pinyin term if they are pinyin, default: true, eg: `liudehuaalibaba13zhuanghan` -> `liu`,`de`,`hua`,`a`,`li`,`ba`,`ba`,`13`,`zhuang`,`han`, NOTE:  `keep_none_chinese` and `keep_none_chinese_together` should be enabled first
-* `keep_original` when this option enabled, will keep original input as well, default: false
-* `lowercase`  lowercase non Chinese letters, default: true
-* `trim_whitespace` default: true
-* `remove_duplicated_term` when this option enabled, duplicated term will be removed to save index, eg: `de的`>`de`, default: false,  NOTE: position related query maybe influenced
-* `ignore_pinyin_offset` after 6.0, offset is strictly constrained, overlapped tokens are not allowed, with this parameter, overlapped token will allowed by ignore offset, please note, all position related query or highlight will become incorrect, you should use multi fields and specify different settings for different query purpose. if you need offset, please set it to false. default: true.
+Technical details:
+
+* [JSSC](https://github.com/scream3r/java-simple-serial-connector) or [JSerialComm](https://github.com/Fazecast/jSerialComm) for serial communication
+* [JogAmp](https://jogamp.org/) for OpenGL
+* Built with [Netbeans Platform](https://netbeans.org/features/platform/)
+* Developed with NetBeans 8.0.2 or later
+
+## Downloads
+Below you will find the latest release of UGS.<br/> For older releases please visit the [releases page](https://github.com/winder/Universal-G-Code-Sender/releases).
+
+**UGS Platform**<br>
+The next generation, feature packed variant based on the Netbeans Platform.<br>
+Unpack and start the program ```bin/ugsplatform```
+
+| Latest release (v2.0.9) | Previous release (v2.0.8) | Nightly build  |
+|:------------------------|:---------------|:--------------|
+| [![Windows](pictures/os_windows.png) Windows](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app-win.zip)           | [![Windows](pictures/os_windows.png) Windows](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app-win.zip)           | [![Windows](pictures/os_windows.png) Windows](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app-win.zip)  |
+| [![Mac OSX](pictures/os_mac.png) Mac OSX](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app-ios.dmg)               | [![Mac OSX](pictures/os_mac.png) Mac OSX](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app-ios.dmg)               | [![Mac OSX](pictures/os_mac.png) Mac OSX](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app-ios.dmg) |
+| [![Linux x64](pictures/os_linux.png) Linux](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app-linux.tar.gz)        | [![Linux x64](pictures/os_linux.png) Linux](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app-linux.tar.gz)        | [![Linux x64](pictures/os_linux.png) Linux](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app-linux.tar.gz) |
+| [![Linux ARM](pictures/os_linux_arm.png) RaspberryPI](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app-pi.tar.gz) | [![Linux ARM](pictures/os_linux_arm.png) RaspberryPI](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app-pi.tar.gz) | [![Linux ARM](pictures/os_linux_arm.png) RaspberryPI](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app-pi.tar.gz) |
+| [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/v2.0.9/ugs-platform-app.zip)                    | [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/v2.0.8/ugs-platform-app.zip)                    | [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/nightly/ugs-platform-app.zip) |
+
+**UGS Classic**<br>
+A clean and lightweight variant of UGS (requires [Java](https://java.com/en/download/manual.jsp)). <br>
+Unpack and start the program by double clicking the jar file. On some platforms you may need to run the included start script. <br>
+
+| Latest release (v2.0.9) | Previous release (v2.0.8) | Nightly build  |
+|:---------------|:---------------|:--------------|
+| [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/v2.0.9/UniversalGcodeSender.zip) | [![Zip](pictures/zip.png) All platforms](https://ugs.jfrog.io/ugs/UGS/v2.0.8/UniversalGcodeSender.zip) | [![Zip](pictures/zip.png) All platforms](http://bit.ly/2HhJIir) |
 
 
+## Screenshots
 
-1.Create a index with custom pinyin analyzer
-<pre>
-PUT /medcl/ 
-{
-    "settings" : {
-        "analysis" : {
-            "analyzer" : {
-                "pinyin_analyzer" : {
-                    "tokenizer" : "my_pinyin"
-                    }
-            },
-            "tokenizer" : {
-                "my_pinyin" : {
-                    "type" : "pinyin",
-                    "keep_separate_first_letter" : false,
-                    "keep_full_pinyin" : true,
-                    "keep_original" : true,
-                    "limit_first_letter_length" : 16,
-                    "lowercase" : true,
-                    "remove_duplicated_term" : true
-                }
-            }
-        }
-    }
-}
-</pre>
+### UGS Platform
 
-2.Test Analyzer, analyzing a chinese name, such as 刘德华
-<pre>
-GET /medcl/_analyze
-{
-  "text": ["刘德华"],
-  "analyzer": "pinyin_analyzer"
-}</pre>
-<pre>
-{
-  "tokens" : [
-    {
-      "token" : "liu",
-      "start_offset" : 0,
-      "end_offset" : 1,
-      "type" : "word",
-      "position" : 0
-    },
-    {
-      "token" : "de",
-      "start_offset" : 1,
-      "end_offset" : 2,
-      "type" : "word",
-      "position" : 1
-    },
-    {
-      "token" : "hua",
-      "start_offset" : 2,
-      "end_offset" : 3,
-      "type" : "word",
-      "position" : 2
-    },
-    {
-      "token" : "刘德华",
-      "start_offset" : 0,
-      "end_offset" : 3,
-      "type" : "word",
-      "position" : 3
-    },
-    {
-      "token" : "ldh",
-      "start_offset" : 0,
-      "end_offset" : 3,
-      "type" : "word",
-      "position" : 4
-    }
-  ]
-}
-</pre>
+UGS Platform main window
 
-3.Create mapping
-<pre>
-POST /medcl/_mapping 
-{
-        "properties": {
-            "name": {
-                "type": "keyword",
-                "fields": {
-                    "pinyin": {
-                        "type": "text",
-                        "store": false,
-                        "term_vector": "with_offsets",
-                        "analyzer": "pinyin_analyzer",
-                        "boost": 10
-                    }
-                }
-            }
-        }
-    
-}
-</pre>
+![UGS Platform](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_ugs_platform.png "UGS Platform")
 
-4.Indexing
-<pre>
-POST /medcl/_create/andy
-{"name":"刘德华"}
-</pre>
+Customizable panel layout
 
-5.Let's search
+![Customizable panel layout](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_customizable_panels.png "Customizable panel layout")
 
-<pre>
+Menu actions with customizable keybindings
 
-curl http://localhost:9200/medcl/_search?q=name:%E5%88%98%E5%BE%B7%E5%8D%8E
-curl http://localhost:9200/medcl/_search?q=name.pinyin:%e5%88%98%e5%be%b7
-curl http://localhost:9200/medcl/_search?q=name.pinyin:liu
-curl http://localhost:9200/medcl/_search?q=name.pinyin:ldh
-curl http://localhost:9200/medcl/_search?q=name.pinyin:de+hua
+![Actions](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_actions_menu.png "Actions")
 
-</pre>
+Menu with plugins
 
-6.Using Pinyin-TokenFilter
-<pre>
-PUT /medcl1/ 
-{
-    "settings" : {
-        "analysis" : {
-            "analyzer" : {
-                "user_name_analyzer" : {
-                    "tokenizer" : "whitespace",
-                    "filter" : "pinyin_first_letter_and_full_pinyin_filter"
-                }
-            },
-            "filter" : {
-                "pinyin_first_letter_and_full_pinyin_filter" : {
-                    "type" : "pinyin",
-                    "keep_first_letter" : true,
-                    "keep_full_pinyin" : false,
-                    "keep_none_chinese" : true,
-                    "keep_original" : false,
-                    "limit_first_letter_length" : 16,
-                    "lowercase" : true,
-                    "trim_whitespace" : true,
-                    "keep_none_chinese_in_first_letter" : true
-                }
-            }
-        }
-    }
-}
-</pre>
+![Plugins](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_plugins_menu.png "Plugins")
 
-Token Test:刘德华 张学友 郭富城 黎明 四大天王
-<pre>
-GET /medcl1/_analyze
-{
-  "text": ["刘德华 张学友 郭富城 黎明 四大天王"],
-  "analyzer": "user_name_analyzer"
-}
-</pre>
-<pre>
-{
-  "tokens" : [
-    {
-      "token" : "ldh",
-      "start_offset" : 0,
-      "end_offset" : 3,
-      "type" : "word",
-      "position" : 0
-    },
-    {
-      "token" : "zxy",
-      "start_offset" : 4,
-      "end_offset" : 7,
-      "type" : "word",
-      "position" : 1
-    },
-    {
-      "token" : "gfc",
-      "start_offset" : 8,
-      "end_offset" : 11,
-      "type" : "word",
-      "position" : 2
-    },
-    {
-      "token" : "lm",
-      "start_offset" : 12,
-      "end_offset" : 14,
-      "type" : "word",
-      "position" : 3
-    },
-    {
-      "token" : "sdtw",
-      "start_offset" : 15,
-      "end_offset" : 19,
-      "type" : "word",
-      "position" : 4
-    }
-  ]
-}
-</pre>
+One of many plugins
+
+![Dowel Maker](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_dowel_maker_plugin.png "Dowel maker plugin")
+
+Basic gcode editor
+
+![Basic gcode editor](https://github.com/winder/Universal-G-Code-Sender/raw/master/pictures/2.0_platform_editor.png "Basic gcode editor")
+
+### UGS Classic
+
+UGS Classic main window
+
+![Classic main window](https://winder.github.io/ugs_website/img/screenshots/finished.png)
+
+UGS Classic with visualizer
+
+![Classic visualizer](https://winder.github.io/ugs_website/img/screenshots/visualizer.png)
+
+## Development
+
+For development the [Maven](http://maven.apache.org) build tool is used.
+
+#### Start the application
+
+UGS Classic: 
+```bash
+mvn install
+mvn exec:java -Dexec.mainClass="com.willwinder.universalgcodesender.MainWindow" -pl ugs-core
+```
+
+UGS Platform: 
+```bash
+mvn install
+mvn nbm:run-platform -pl ugs-platform/application
+```
 
 
-7.Used in phrase query
+#### Execute all tests
 
-- option 1
+```bash
+mvn test
+```
 
-<pre>
-PUT /medcl2/
-{
-    "settings" : {
-        "analysis" : {
-            "analyzer" : {
-                "pinyin_analyzer" : {
-                    "tokenizer" : "my_pinyin"
-                    }
-            },
-            "tokenizer" : {
-                "my_pinyin" : {
-                    "type" : "pinyin",
-                    "keep_first_letter":false,
-                    "keep_separate_first_letter" : false,
-                    "keep_full_pinyin" : true,
-                    "keep_original" : false,
-                    "limit_first_letter_length" : 16,
-                    "lowercase" : true
-                }
-            }
-        }
-    }
-}
-GET /medcl2/_search
-{
-  "query": {"match_phrase": {
-    "name.pinyin": "刘德华"
-  }}
-}
 
-</pre>
+#### Building the self-executing JAR
 
-- option 2
+```bash
+mvn install
+mvn package -pl ugs-core
+```
 
-<pre>
- 
-PUT /medcl3/
-{
-   "settings" : {
-       "analysis" : {
-           "analyzer" : {
-               "pinyin_analyzer" : {
-                   "tokenizer" : "my_pinyin"
-                   }
-           },
-           "tokenizer" : {
-               "my_pinyin" : {
-                   "type" : "pinyin",
-                   "keep_first_letter":true,
-                   "keep_separate_first_letter" : true,
-                   "keep_full_pinyin" : true,
-                   "keep_original" : false,
-                   "limit_first_letter_length" : 16,
-                   "lowercase" : true
-               }
-           }
-       }
-   }
-}
-   
-POST /medcl3/_mapping 
-{
-  "properties": {
-      "name": {
-          "type": "keyword",
-          "fields": {
-              "pinyin": {
-                  "type": "text",
-                  "store": false,
-                  "term_vector": "with_offsets",
-                  "analyzer": "pinyin_analyzer",
-                  "boost": 10
-              }
-          }
-      }
-  }
-}
-  
-   
-GET /medcl3/_analyze
-{
-   "text": ["刘德华"],
-   "analyzer": "pinyin_analyzer"
-}
- 
-POST /medcl3/_create/andy
-{"name":"刘德华"}
 
-GET /medcl3/_search
-{
- "query": {"match_phrase": {
-   "name.pinyin": "刘德h"
- }}
-}
+#### Build a UniversalGcodeSender.zip release file
 
-GET /medcl3/_search
-{
- "query": {"match_phrase": {
-   "name.pinyin": "刘dh"
- }}
-}
+```bash
+mvn package assembly:assembly
+```
 
-GET /medcl3/_search
-{
- "query": {"match_phrase": {
-   "name.pinyin": "liudh"
- }}
-}
+#### Develop via IntelliJ
 
-GET /medcl3/_search
-{
- "query": {"match_phrase": {
-   "name.pinyin": "liudeh"
- }}
-}
+If you are more used to IntelliJ, you can also build, run and debug it there.
 
-GET /medcl3/_search
-{
- "query": {"match_phrase": {
-   "name.pinyin": "liude华"
- }}
-}
-
-</pre>
-
-8.That's all, have fun.
+- Run  `mvn nbm:run-platform -pl ugs-platform/application` once via terminal to build everything
+- Import the Source, `File` -> `New` -> `Project from existing Sources`
+- Setup a new "Run Configuration", `Java Application`, with following settings:
+  - Main Class: `org.netbeans.Main`
+  - VM Options: `-Dnetbeans.user=$ProjectFileDir$/ugs-platform/application/target/userdir -Dnetbeans.home=$ProjectFileDir$/ugs-platform/application/target/ugsplatform/platform -Dnetbeans.logger.console=true -Dnetbeans.indexing.noFileRefresh=true -Dnetbeans.dirs="$ProjectFileDir$/ugs-platform/application/target/ugsplatform/ugsplatform:$ProjectFileDir$/ugs-platform/application/target/ugsplatform/platform:$ProjectFileDir$/ugs-platform/application/target/ugsplatform/ide:$ProjectFileDir$/ugs-platform/application/target/ugsplatform/extra:$ProjectFileDir$/ugs-platform/application/target/ugsplatform/java"`
+  - Program arguments: `--branding ugsplatform`
+  - Working dir: `$ProjectFileDir$`
+  - Use classpath of module: `ugs-platform-app` 
+- There is a [runConfiguration](.idea/runConfigurations/UGS_Platform.xml) in the repository, which should be available after importing the project
