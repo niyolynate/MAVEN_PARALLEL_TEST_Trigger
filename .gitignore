@@ -1,7 +1,18 @@
-target/
+*.class
+
 .classpath
 .project
 .settings
-.idea/
+target
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# IDEA-related project files
+/.idea
 *.iml
-demo-dist/
+
+# Manifests
+MANIFEST.MF
