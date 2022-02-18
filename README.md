@@ -1,42 +1,46 @@
-# orientdb-gremlin
+# Objectify
 
-[![Build Status](https://travis-ci.org/orientechnologies/orientdb-gremlin.svg?branch=develop)](https://travis-ci.org/orientechnologies/orientdb-gremlin?branch=develop) [![Coverage Status](https://coveralls.io/repos/mpollmeier/orientdb-gremlin/badge.svg?branch=master)](https://coveralls.io/r/mpollmeier/orientdb-gremlin?branch=master) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.michaelpollmeier/orientdb-gremlin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.michaelpollmeier/orientdb-gremlin/) 
+Objectify is a Java data access API specifically designed for the Google Cloud Datastore (aka the Google App Engine Datastore).  It occupies a
+"middle ground"; easier to use and more transparent than JDO or JPA, but significantly more convenient than
+the low-level API libraries that Google provides.  Objectify is designed to make novices immediately productive yet also expose the full power
+of the Datastore.
 
-[Apache TinkerPop](https://tinkerpop.apache.org/) 3 graph structure implementation for OrientDB. This started off as just a proof of concept, but thanks to a lot of help it's now in a really good shape and it has been officially adopted by the OrientDB team to be part of OrientDB `v3.x` and should eventually replace OrientDB's `graphdb` implementation that is still on TinkerPop 2. 
+**Important note about versions**: Objectify v5 and prior use the _Google App Engine API for Java_ and therefore can only be used within Google App Engine Standard. Objectify v6+ uses the _Cloud Datastore API_ and can be used from anywhere - GAE Standard, GAE Flex, GCE, or outside Google Cloud entirely. See the [FAQ](https://github.com/objectify/objectify/wiki/FrequentlyAskedQuestions) for more information.
 
-The main area that need some more work is index lookups - currently it does find the right index for a simple case, e.g. `g.V.hasLabel("myLabel").has("someKey", "someValue")`. However if there are multiple indexes on the same property, or if there the traversal should better use a composite index, that's not handled well yet. If you feel inclined you can add these cases to the `OrientGraphIndexTest.java`. The function that looks up indexes is `OrientGraphStep.findIndex`.
+## Features
 
-## Tests
-* you can run the standard tinkerpop test suite with `mvn install -P release`
-* there are some additional tests that you can run independently with `mvn test`
-* additionally there is a separate suite of tests in the `tests-scala` directory which you can run using `sbt test`
-* to automatically format the code (travis CI enforces a format check), just run `mvn clean install`
+  * Objectify lets you persist, retrieve, delete, and query your own **typed objects**.
+  ```
+  @Entity
+  class Car {
+      @Id String vin; // Can be Long, long, or String
+      String color;
+  }
+    
+  ofy().save().entity(new Car("123123", "red")).now();
+  Car c = ofy().load().type(Car.class).id("123123").now();
+  ofy().delete().entity(c);
+  ```
+  * Objectify surfaces **all native datastore features**, including batch operations, queries, transactions, asynchronous operations, and partial indexes.
+  * Objectify provides **type-safe key and query classes** using Java generics.
+  * Objectify provides a **human-friendly query interface**.
+  * Objectify can automatically **cache your data in memcache** for improved read performance.
+  * Objectify can store polymorphic entities and perform **true polymorphic queries**.
+  * Objectify provides a simple, **easy-to-understand transaction model**.
+  * Objectify provides built-in facilities to **help migrate schema changes** forward.
+  * Objectify provides **thorough documentation** of concepts as well as use cases.
+  * Objectify has an **extensive test suite** to prevent regressions.
 
-## Usage
-Have a look at the tests-scala which demonstrates the usage. There's also an orientdb example project in [gremlin-scala-examples](https://github.com/mpollmeier/gremlin-scala-examples).
+## Documentation
 
-## Labels and classes
-Vertices and Edges are stored as classes based on their label. In order to allow vertices and edges to use the same label, the implementation prepends `V_` or `E_` in the class name:
-* vertex with label `user` -> classname `V_user`
-* edge with label `user` -> classname `E_user`
+Full documentation is available in the [Objectify Wiki](https://github.com/objectify/objectify/wiki).
 
-## Migrations
-You might want to use [orientdb-migrations](https://github.com/springnz/orientdb-migrations) to create a schema with indexes etc. 
+## Downloads
 
-## Release
-* upgrade version: remove SNAPSHOT (driver/pom.xml and tests-scala/build.sbt)
-* commit on branch, push, create PR on github
-* await green light from travis
-* merge PR on github
-* then execute
-```
-* mvn pull
-* mvn clean deploy -Prelease
-* git tag VERSION
-```
-* bump versions to next SNAPSHOT (pom.xml, build.sbt)
-* then
-```
-* git push
-* git push --tags
-```
+Objectify is released to the [Maven Central Repository](https://github.com/objectify/objectify/wiki/MavenRepository)
+and can be downloaded directly from there.
+
+## Help
+
+Help is provided in the
+[Objectify App Engine User Group](https://groups.google.com/forum/?fromgroups#!forum/objectify-appengine)
