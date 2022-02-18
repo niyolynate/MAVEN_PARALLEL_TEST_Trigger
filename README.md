@@ -1,53 +1,91 @@
-Web Archive Discovery
-=====================
+[![Build Status](https://travis-ci.org/Esri/spatial-framework-for-hadoop.png?branch=master)](https://travis-ci.org/Esri/spatial-framework-for-hadoop)
+# spatial-framework-for-hadoop
 
-These are the components we use to data-mine and index our ARC and WARC files and make the contents explorable and discoverable.
+The __Spatial Framework for Hadoop__ allows developers and data scientists to use the Hadoop data processing system 
+for spatial data analysis.
 
-[![Build Status](https://travis-ci.org/ukwa/webarchive-discovery.png?branch=master)](https://travis-ci.org/ukwa/webarchive-discovery/)
+For tools, [samples](https://github.com/Esri/gis-tools-for-hadoop/tree/master/samples), and [tutorials](https://github.com/Esri/gis-tools-for-hadoop/wiki) that use this framework, head over 
+to [GIS Tools for Hadoop](https://github.com/Esri/gis-tools-for-hadoop).
 
-Documentation
--------------
+## What's New
 
-See the [wiki](https://github.com/ukwa/webarchive-discovery/wiki).
+* ST_Centroid now returns the geometry centroid rather than the center of its envelope (as of v2.1).
+* [Spatial Framework for Hadoop v2](https://github.com/Esri/spatial-framework-for-hadoop/releases) is compatible with [Geometry v2](https://github.com/Esri/geometry-api-java/releases), Hive v2.3 & v3, and Jackson v2.  Note: up-to-date releases may be available [on Github](https://github.com/Esri/spatial-framework-for-hadoop/releases) but [may not be on Maven Central](https://github.com/Esri/spatial-framework-for-hadoop/issues/123).
 
-Running the development Elastic server
---------------------------------------
+## Features
 
-The Elastic part is written for [Elasticsearch 7](https://www.elastic.co/guide/en/elasticsearch/reference/current/index.html), but may also usable for older versions (with minor modifications). You can start it with the provided docker-compose file. After checkout do the following steps in a shell
+* **[JSON Utilities](https://github.com/Esri/spatial-framework-for-hadoop/wiki/JSON-Utilities)** - Utilities 
+for interacting with JSON exported from ArcGIS
+ * [Javadoc](http://esri.github.com/spatial-framework-for-hadoop/json/)
+* **[Hive Spatial](https://github.com/Esri/spatial-framework-for-hadoop/wiki/Hive-Spatial)** - User-Defined 
+Functions and SerDes for spatial analysis in Hive
+ * [UDF Documentation](https://github.com/Esri/spatial-framework-for-hadoop/wiki/UDF-Documentation)
+ * [JSON SerDe](https://github.com/Esri/spatial-framework-for-hadoop/wiki/Hive-JSON-SerDe)
 
-    $ cd warc-indexer/src/main/elastic/
-    $ docker-compose up -d
+## Getting Started
 
-## Initalize the index
+### Maven
 
-To use the cluster you need to create an index. You can do it by calling 
+Build as you would any other Mavenized repository.  All dependencies are pulled automatically. 
 
-    $ curl -H 'Content-Type: application/json' -XPUT http://localhost:9200/warcdiscovery/  -d @schema.json
+### Ant
 
-this call creates the index with the schema.json which you can use with warcindexer.
-You can delete the index by calling
+Ant build files are also available,
+but are considered legacy, and may likely be removed in a future release.
 
-    $ curl -XDELETE http://localhost:9200/warcdiscovery
+At the root level of this repository, you can build a single jar with everything in the framework 
+using [Apache Ant](http://ant.apache.org/).  Alternatively, you can build a jar at the root level of each 
+framework component (i.e., `hive/build.xml`).
 
-## Solr-schema ported to Elastic
-
-The Solr-schema was as close as possible ported to Elastic. There are just a few small differences:
-
-* default value "NOW" of index_time will be done by the warcindexer
-* default value "other" of content_type_norm will be done by the warcindexer
-* field content must be indexed, otherwise no position_increment_gap is possible in elastic
-* we only put ssdeep_hash_bs_* as dynamicField and skipped the institution-specific values, but these could be added easily 
-
-Indexing a WARC file
---------------------
-
-Use the following line if you want to populate the elastic index:
-
-    $ java -jar target/warc-indexer-*-jar-with-dependencies.jar -e http://localhost:9200/warcdiscovery/ src/test/resources/wikipedia-mona-lisa/flashfrozen-jwat-recompressed.warc.gz
+The build files use [Maven Ant Tasks](http://maven.apache.org/ant-tasks/download.html) for dependency 
+management. You will need the jar in a place Ant can find it (i.e., `~/.ant/lib/maven-ant-tasks-2.1.3.jar`).
 
 
+## Dependencies
 
-License
--------
+* [Esri Geometry API for Java](https://github.com/Esri/geometry-api-java) - Java geometry library for spatial data 
+processing.
 
-Overall, [GNU General Public License Version 2](http://www.gnu.org/copyleft/gpl.html), but some sub-components are [Apache Software License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0.txt).
+## Requirements
+
+* Geometry 2.2
+* Hive 0.11 and above (see [Hive Compatibility issues](https://github.com/Esri/spatial-framework-for-hadoop/wiki/ST_Geometry-for-Hive-Compatibility-with-Hive-Versions))  (For building from source, Hive-0.12+ is required.)
+* Workflows calling MapReduce jobs require the location of the custom job to be run.
+* Custom MapReduce jobs that use the Esri Geometry API require that the developer has authored the job, 
+(referencing the com.esri.geometry.\* classes), and deployed the job Jar file to the Hadoop system, prior to the 
+ArcGIS user submitting the workflow file. 
+
+## Resources
+
+* [GeoData Blog on the ArcGIS Blogs](http://blogs.esri.com/esri/arcgis/author/jonmurphy/)
+* [Big Data Place on GeoNet](https://geonet.esri.com/groups/big-data)
+* [ArcGIS Geodata Resource Center]( http://resources.arcgis.com/en/communities/geodata/)
+* [ArcGIS Blog](http://blogs.esri.com/esri/arcgis/)
+* [twitter@esri](http://twitter.com/esri)
+
+## Issues
+
+Find a bug or want to request a new feature?  Please let us know by submitting an [issue](https://github.com/Esri/spatial-framework-for-hadoop/issues).
+
+## Contributing
+
+Esri welcomes contributions from anyone and everyone. Please see our [guidelines for contributing](https://github.com/esri/contributing)
+
+## Licensing
+Copyright 2013-2022 Esri
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+A copy of the license is available in the 
+repository's [license.txt](https://raw.github.com/Esri/spatial-framework-for-hadoop/master/license.txt) file.
+

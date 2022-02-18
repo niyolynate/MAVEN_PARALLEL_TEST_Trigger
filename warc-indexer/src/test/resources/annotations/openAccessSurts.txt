@@ -1,2 +1,0 @@
-http://(org,wikipedia,www,
-http://(org,wikipedia,en,
