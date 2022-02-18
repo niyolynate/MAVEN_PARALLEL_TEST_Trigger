@@ -1,28 +1,31 @@
-#Eclipse
-.classpath
-.project
-test-output
+# Maven build output
+target
+bin
+
+# Eclipse project settings
 .settings
+.project
+.classpath
+.factorypath
+/.apt_generated/
+/.apt_generated_tests/
 
-#IntelliJ
+# IntelliJ IDEA project settings (old and new)
 *.iml
-*.ipr
-*.iws
-.idea/
+.idea
 
-#Neo4j
-*.db/
+# VS Code files
+.vscode
 
-#Gradle
-.gradle
+# vi temporary files
+*.swp
 
-#Build directories
-bin/
-build/
-target/
+# log files, such as JVM crash files
+*.log
 
-#Maven
-*.versionsBackup
 
-#Tests artifacts
-plugin/derived-config.txt
+# vscode project settings
+.factorypath
+
+# Exclude *.env files except default .env
+?*.env

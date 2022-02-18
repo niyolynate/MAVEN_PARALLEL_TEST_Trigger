@@ -1,52 +1,48 @@
-# OWASP Find Security Bugs 
-[![Java CI with SpotBugs](https://github.com/find-sec-bugs/find-sec-bugs/actions/workflows/spotbugs.yml/badge.svg)](https://github.com/find-sec-bugs/find-sec-bugs/actions/workflows/spotbugs.yml) [![codecov](https://codecov.io/gh/find-sec-bugs/find-sec-bugs/branch/master/graph/badge.svg)](https://codecov.io/gh/find-sec-bugs/find-sec-bugs) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.h3xstream.findsecbugs/findsecbugs-plugin/badge.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.h3xstream.findsecbugs%22%20a%3A%22findsecbugs-plugin%22) [![Slack Channel](https://img.shields.io/badge/slack-OWASP%2ffind--sec--bugs-orange?logo=slack)](https://app.slack.com/client/T04T40NHX/CN8G79Y6P)
+# What is BlackLab?
+
+[BlackLab](http://inl.github.io/BlackLab/) is a corpus retrieval engine built on top of [Apache Lucene](http://lucene.apache.org/). It allows fast, complex searches with accurate hit highlighting on large, tagged and annotated, bodies of text. It was developed at the Institute of Dutch Lexicology (INL) to provide a fast and feature-rich search
+interface on our historical and contemporary text corpora.
+
+We're also working on BlackLab Server, a web service interface to BlackLab, so you can access it from any programming language. BlackLab Server is included in the repository as well.
+
+BlackLab and BlackLab Server are licensed under the [Apache License 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
+To learn how to index and search your data, see the [official project site](http://inl.github.io/BlackLab/).
+
+## Using BlackLab with Docker
+
+An experimental Docker setup is provided now. It will likely change in the future.
+
+We assume here that you are familiar with the BlackLab indexing process; see [indexing with BlackLab](https://inl.github.io/BlackLab/indexing-with-blacklab.html) to learn more.
+
+Create a file named `test.env` with your indexing configuration:
+
+```ini
+IMAGE_VERSION=latest
+BLACKLAB_FORMATS_DIR=/path/to/my/formats
+INDEX_NAME=my-index
+INDEX_FORMAT=my-file-format
+INDEX_INPUT_DIR=/path/to/my/input-files
+JAVA_OPTS=-Xmx10G
+```
+
+To index your data:
+
+```bash
+docker-compose --env-file test.env run --rm indexer
+```
+
+Now start the server:
+
+```bash
+docker-compose up -d
+```
+
+Your index should now be accessible at http://localhost:8080/blacklab-server/my-index.
 
 
-Find Security Bugs is the [SpotBugs](https://spotbugs.github.io/) plugin for security audits of Java web applications.
+See the [Docker README](docker/README.md) for more details.
 
-Website : http://find-sec-bugs.github.io/
+## Special thanks
 
-## Main developers
-
- - [Philippe Arteau](https://github.com/h3xstream) from [GoSecure](https://github.com/gosecure)
- - [David Formánek](https://github.com/formanek)
- - [Tomáš Polešovský](https://github.com/topolik) from [Liferay](https://github.com/liferay)
-
-## Notable contributions
-
- - [David Formánek](https://github.com/formanek)
-   - Major improvements and refactoring on the taint analysis for injections.
-   - The creation of a detector for hard coded passwords and cryptographic keys.
- - [Tomáš Polešovský](https://github.com/topolik)
-   - Improvements and bug fixes related to the taint analysis.
- - [Maxime Nadeau](https://github.com/MaxNad)
-   - New detectors surrounding the Play Framework and improvements related to Scala.
- - [Naoki Kimura](https://github.com/naokikimura)
-   - Detector for [injection in custom API](http://h3xstream.github.io/find-sec-bugs/bugs.htm#CUSTOM_INJECTION)
-   - Translation of [messages in Japanese](http://h3xstream.github.io/find-sec-bugs/bugs_ja.htm)
- - [Dave Wichers](https://github.com/davewichers)
-   - Improvement to vulnerability descriptions
-
-## Project Sponsors
-
-The development of Find Security Bugs is supported by [GoSecure](https://github.com/gosecure) since 2016. The support includes the development of new detectors and the research for new vulnerability classes.
-
-![GoSecure Logo](website/out_web/images/gosecure.png)
-
-## Screenshots
-
-### Eclipse
-
-![Eclipse](https://find-sec-bugs.github.io/images/screens/eclipse.png)
-
-### IntelliJ / Android Studio
-
-![IntelliJ](https://find-sec-bugs.github.io/images/screens/intellij.png)
-
-### SonarQube
-
-![SonarQube](https://find-sec-bugs.github.io/images/screens/sonar.png)
-
-## License
-
-This software is release under [LGPL](http://www.gnu.org/licenses/lgpl.html).
+* ej-technologies for the <a href="https://www.ej-technologies.com/products/jprofiler/overview.html">JProfiler Java profiler</a>
