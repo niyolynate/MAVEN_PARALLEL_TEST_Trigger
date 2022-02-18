@@ -1,5 +1,0 @@
-#
-# config for https://jitpack.io
-#
-jdk:
-  - oraclejdk8

@@ -1,5 +1,6 @@
-target/
+*~
+target
+settings.xml
+.idea
 *.iml
-*.ipr
-*.iws
-.idea/
+
