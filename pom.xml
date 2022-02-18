@@ -1,235 +1,242 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>au.com.mineauz</groupId>
-  <artifactId>MinigamesProject</artifactId>
-  <version>1.16-SNAPSHOT</version>
-  <packaging>pom</packaging>
-  <name>Minigames-Project</name>
-  <url>https://www.spigotmc.org/resources/minigames.19687/</url>
-  <scm>
-    <connection>scm:git:git@github.com:AddstarMC/Minigames.git</connection>
-    <developerConnection>scm:git:git@github.com:AddstarMC/Minigames.git</developerConnection>
-    <url>https://github.com/AddstarMC/Minigames</url>
-    <tag>HEAD</tag>
-  </scm>
-  <properties>
+   <parent>
+      <groupId>org.sonatype.oss</groupId>
+      <artifactId>oss-parent</artifactId>
+      <version>7</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>uk.bl.wa.discovery</groupId>
+   <artifactId>warc-discovery</artifactId>
+   <version>3.2.0-SNAPSHOT</version>
+   <packaging>pom</packaging>
+   <organization>
+      <name>The webarchive-discovery project contributors</name>
+      <url>https://github.com/ukwa/webarchive-discovery/graphs/contributors</url>
+   </organization>
+   <inceptionYear>2013</inceptionYear>
+   <modules>
+      <module>warc-hadoop-recordreaders</module>
+      <module>warc-hadoop-indexer</module>
+      <module>warc-indexer</module>
+      <module>digipres-tika</module>
+      <!-- module>warc-nlp</module -->
+      <!-- module>warc-openimaj</module -->
+      <!-- module>warc-analysers-oscar4</module -->
+   </modules>
+   <licenses>
+      <license>
+         <name>The Apache Software License, Version 2.0</name>
+         <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+         <distribution>repo</distribution>
+      </license>
+      <license>
+         <name>GNU General Public License Version 2</name>
+         <url>http://www.gnu.org/copyleft/gpl.html</url>
+         <distribution>repo</distribution>
+      </license>
+   </licenses>
+   <developers>
+      <developer>
+         <id>anjackson</id>
+         <name>Andrew Jackson</name>
+         <email>Andrew.Jackson@bl.uk</email>
+      </developer>
+   </developers>
+   <issueManagement>
+      <system>GitHub Issues</system>
+      <url>https://github.com/ukwa/warc-discovery/issues</url>
+   </issueManagement>
+   <scm>
+      <connection>scm:git:https://github.com/ukwa/webarchive-discovery.git</connection>
+      <developerConnection>scm:git:https://github.com/ukwa/webarchive-discovery.git</developerConnection>
+      <url>https://github.com/ukwa/webarchive-discovery.git</url>
+   </scm>
+   <properties>
+      <solr.version>8.7.0</solr.version>
+      <webarchive.commons.version>1.1.9</webarchive.commons.version>
+      <jdk.version>1.8</jdk.version>
+      <hadoop.version>0.20.2</hadoop.version>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-      <build.number />
-      <plugin.version>${project.version}-${build.number}</plugin.version>
-      <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
-      <spigot.version>${spigot.api.version}.${spigot.minor.version}-R0.1-SNAPSHOT</spigot.version>
-      <spigot.api.version>1.16</spigot.api.version>
-      <spigot.minor.version>1</spigot.minor.version>
-      <codacy.api.token>${env.CODACY_API_TOKEN}</codacy.api.token>
-      <!--suppress UnresolvedMavenProperty -->
-      <travis.commit>${env.TRAVIS_COMMIT}</travis.commit>
-      <env.CODACY_API_TOKEN/>
-      <argline/>
-  </properties>
-  <developers>
-    <developer>
-      <id>Razz</id>
-      <name>Razz</name>
-      <url>http://github.com/Razz</url>
-      <roles>
-        <role>emeritus</role>
-      </roles>
-    </developer>
-    <developer>
-      <id>AddstarMC</id>
-      <name>AddstarMC</name>
-      <url>http://github.com/AddstarMC</url>
-      <roles>
-        <role>developer</role>
-        <role>maintainer</role>
-      </roles>
-      <timezone>10</timezone>
-    </developer>
-  </developers>
-  <licenses>
-    <license>
-        <name>MIT License</name>
-        <url>https://opensource.org/licenses/MIT</url>
-    </license>
-  </licenses>
-  <distributionManagement>
-    <repository>
-      <id>maven.addstar.com.au</id>
-      <name>maven.addstar.com.au-releases</name>
-      <url>https://maven.addstar.com.au/artifactory/ext-release-local</url>
-    </repository>
-      <snapshotRepository>
-      <id>maven.addstar.com.au</id>
-      <name>maven.addstar.com.au-snapshots</name>
-      <url>https://maven.addstar.com.au/artifactory/ext-snapshot-local</url>
-    </snapshotRepository>
-  </distributionManagement>
-  <modules>
-    <module>Minigames</module>
-    <module>Regions</module>
-    <module>minigamesdistribution</module>
-  </modules>
-  <repositories>
-    <!-- Addstar repo -->
-      <repository>
-          <id>addstar-repo</id>
-          <url>https://maven.addstar.com.au/artifactory/ext-release-local</url>
-          <snapshots>
-              <enabled>false</enabled>
-          </snapshots>
-      </repository>
-      <repository>
-          <id>addstar-snapshot-repo</id>
-          <url>https://maven.addstar.com.au/artifactory/ext-snapshot-local</url>
-          <snapshots>
-              <enabled>true</enabled>
-          </snapshots>
-          <releases>
-              <enabled>false</enabled>
-          </releases>
-      </repository>
-      <repository>
-          <id>destroystokyo-repo</id>
-          <url>https://repo.destroystokyo.com/repository/maven-public/</url>
-      </repository>
-    <!-- Other repositories -->
-      <repository>
-          <id>spigot-repo</id>
-          <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
-      </repository>
-    <repository>
-      <id>maven-central</id>
-      <url>https://repo1.maven.org/maven2/</url>
-  </repository>
-      <repository>
-          <snapshots>
-              <enabled>false</enabled>
-          </snapshots>
-          <id>jcenter</id>
-          <name>bintray</name>
-          <url>https://jcenter.bintray.com</url>
-      </repository>
-  </repositories>
-  <dependencies>
-      <dependency>
-          <groupId>com.destroystokyo.paper</groupId>
-          <artifactId>paper-api</artifactId>
-          <version>${spigot.version}</version>
-          <scope>provided</scope>
-      </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.13</version>
-      <scope>test</scope>
-    </dependency>
-      <dependency>
-          <groupId>org.jetbrains</groupId>
-          <artifactId>annotations</artifactId>
-          <version>20.1.0</version>
-          <scope>provided</scope>
-          <!-- no runtime features are used-->
-      </dependency>
-  </dependencies>
-
-  <build>
-    <finalName>${project.artifactId}-${project.version}</finalName>
-    <pluginManagement>
+      <ram>1024</ram>
+      <jackson.version>2.11.3</jackson.version>
+      <slf4j.version.override>1.5.11</slf4j.version.override> <!-- last version compatible with ancient Hadoop -->
+   </properties>
+   <build>
       <plugins>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.8.1</version>
-          <configuration>
-            <source>1.8</source>
-            <target>1.8</target>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>3.3.0</version>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <version>3.2.0</version>
-        </plugin>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-source-plugin</artifactId>
-              <version>3.2.1</version>
-              <executions>
-                  <execution>
-                      <id>attach-sources</id>
-                      <goals>
-                          <goal>jar</goal>
-                      </goals>
-                      <phase>package</phase>
-                  </execution>
-              </executions>
-              <configuration>
-                  <skipSource>false</skipSource>
-              </configuration>
-          </plugin>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-release-plugin</artifactId>
-              <version>2.5.3</version>
-          </plugin>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-dependency-plugin</artifactId>
-              <version>3.1.2</version>
-          </plugin>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-project-info-reports-plugin</artifactId>
-              <version>3.1.1</version>
-          </plugin>
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-surefire-plugin</artifactId>
-              <version>2.22.2</version>
-              <configuration>
-                      <!-- no argLine here -->
-              </configuration>
-          </plugin>
-          <plugin>
-              <groupId>org.jacoco</groupId>
-              <artifactId>jacoco-maven-plugin</artifactId>
-              <version>0.8.5</version>
-              <executions>
-                  <execution>
-                      <id>prepare</id>
-                      <goals>
-                          <goal>prepare-agent</goal>
-                      </goals>
-                      <phase>compile</phase>
-                  </execution>
-              </executions>
-          </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+            <configuration>
+               <source>1.8</source>
+               <target>1.8</target>
+            </configuration>
+         </plugin>
+         <plugin>
+            <!-- Separates the unit tests from the integration tests. -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-surefire-plugin</artifactId>
+            <version>3.0.0-M5</version>
+            <configuration>
+               <!-- Skip the default running of this plug-in (or everything 
+                  is run twice...see below) -->
+               <skip>true</skip>
+               <!-- Show 100% of the lines from the stack trace (doesn't 
+                  work) -->
+               <trimStackTrace>false</trimStackTrace>
+               <forkMode>always</forkMode>
+               <argLine>-Xms${ram}m -Xmx${ram}m</argLine>
+            </configuration>
+            <executions>
+               <execution>
+                  <id>unit-tests</id>
+                  <phase>test</phase>
+                  <goals>
+                     <goal>test</goal>
+                  </goals>
+                  <configuration>
+                     <!-- Never skip running the tests when the test phase 
+                        is invoked -->
+                     <skip>false</skip>
+                     <includes>
+                        <!-- Include unit tests within integration-test phase. -->
+                        <include>**/*Test.java</include>
+                        <include>**/*Tests.java</include>
+                     </includes>
+                     <excludes>
+                        <!-- Exclude integration tests within (unit) test 
+                           phase. -->
+                        <exclude>**/*IntegrationTest.java</exclude>
+                        <exclude>**/*IntegrationTests.java</exclude>
+                     </excludes>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>integration-tests</id>
+                  <phase>integration-test</phase>
+                  <goals>
+                     <goal>test</goal>
+                  </goals>
+                  <configuration>
+                     <!-- Never skip running the tests when the integration-test 
+                        phase is invoked -->
+                     <skip>false</skip>
+                     <includes>
+                        <!-- Include integration tests within integration-test 
+                           phase. -->
+                        <include>**/*IntegrationTest.java</include>
+                        <include>**/*IntegrationTests.java</include>
+                     </includes>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>license-maven-plugin</artifactId>
+            <version>1.16</version>
+            <configuration>
+               <licenseName>gpl_v2</licenseName>
+               <verbose>false</verbose>
+               <canUpdateCopyright>true</canUpdateCopyright>
+               <roots>
+                  <root>src/main/java</root>
+                  <root>src/test/java</root>
+               </roots>
+            </configuration>
+            <executions>
+               <execution>
+                  <id>first</id>
+                  <goals>
+                     <goal>update-file-header</goal>
+                  </goals>
+                  <phase>process-sources</phase>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <version>3.0.1</version>
+            <configuration>
+               <additionalparam>-Xdoclint:none</additionalparam>
+               <additionalOptions>-Xdoclint:none</additionalOptions>
+            </configuration>
+         </plugin>         
       </plugins>
-    </pluginManagement>
-  </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>2.8.1</version>
-            </plugin>
-            <plugin>
-                <groupId>org.jacoco</groupId>
-                <artifactId>jacoco-maven-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <reports>
-                            <!-- select non-aggregate reports -->
-                            <report>report</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
-        </plugins>
-    </reporting>
+   </build>
+
+   <repositories>
+      <repository>
+         <id>version99</id>
+         <!-- highly available repository serving empty artifacts -->
+         <url>https://version99.qos.ch/</url>
+      </repository>
+
+      <repository>
+         <id>maven-restlet</id>
+         <name>Public online Restlet repository</name>
+         <url>http://maven.restlet.org</url>
+      </repository>
+
+      <repository>
+         <id>cloudera</id>
+         <name>Cloudera Hadoop</name>
+         <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+         <layout>default</layout>
+
+         <releases>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+         </releases>
+         <snapshots>
+            <enabled>true</enabled>
+            <updatePolicy>daily</updatePolicy>
+            <checksumPolicy>warn</checksumPolicy>
+         </snapshots>
+      </repository>
+      <!-- <repository> <id>weka</id> <name>Weka unofficial repository</name> 
+         <layout>default</layout> <url>http://maven.ch.cam.ac.uk/m2repo/</url> <snapshots> 
+         <enabled>false</enabled> </snapshots> </repository> -->
+      <repository>
+         <id>apache-snapshots-repo</id>
+         <name>ASF snapshots</name>
+         <releases>
+            <enabled>false</enabled>
+         </releases>
+         <snapshots>
+            <enabled>true</enabled>
+         </snapshots>
+         <url>https://repository.apache.org/snapshots/</url>
+      </repository>
+   </repositories>
+
+   <dependencies>
+      <!--        Logging-->
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>slf4j-api</artifactId>
+         <version>${slf4j.version.override}</version>
+      </dependency>
+      <dependency>
+         <groupId>org.slf4j</groupId>
+         <artifactId>jcl-over-slf4j</artifactId>
+         <version>${slf4j.version.override}</version>
+      </dependency>
+   </dependencies>
+   <dependencyManagement>
+      <dependencies>
+         <dependency><!--Per default replace commons logging with empty jar, for all dependencies-->
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>99-empty</version>
+         </dependency>
+         <dependency> <!--Ignore log4j dependencies. We only include log4j if we actually want to-->
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>99-empty</version>
+         </dependency>
+      </dependencies>
+   </dependencyManagement>
 </project>

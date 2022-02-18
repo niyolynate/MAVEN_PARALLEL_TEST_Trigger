@@ -1,5 +1,0 @@
-[submodule "wiki"]
-    path = wiki
-    url = https://github.com/AddstarMC/Minigames.wiki
-    pushurl = git@github.com:AddstarMC/Minigames.wiki
-

@@ -1,4 +1,8 @@
+.project
+.classpath
 .settings
+build
 target
-.idea/
+credentials.conf
 *.iml
+
