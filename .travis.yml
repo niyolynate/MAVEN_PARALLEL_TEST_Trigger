@@ -1,18 +1,9 @@
-language: java
+sudo: required
 jdk:
-  - openjdk-ea
-  - openjdk17
-  - openjdk11
-  - openjdk8
-
-matrix:
-  fast_finish: true
-  allow_failures:
-    - jdk: openjdk-ea
-
-after_success:
-  - mvn clean test jacoco:report-aggregate coveralls:report
-
-cache:
-  directories:
-  - $HOME/.m2
+  - oraclejdk8
+install: true
+script:
+  - sudo apt-get update && sudo apt-get install oracle-java8-installer
+  - java -version
+language: java
+script: mvn clean package
