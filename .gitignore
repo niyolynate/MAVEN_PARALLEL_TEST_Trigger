@@ -1,21 +1,14 @@
-# Generated Files #
-target/
-.settings/
-*.class
-entityscanner-plug/dependency-reduced-pom.xml
-.DS_Store
-morphia/.DS_Store
-release.properties
-
+.settings
 .idea
-.classpath
-.project
 *.iml
-*.tag
-*.next
-*.releasebackup
+target
+.project
+.classpath
+.checkstyle
+bin
+build.xml
+.DS_Store
+m2e-wtp
 
-# Package Files #
-*.jar
-*.war
-*.ear
+# btm transaction
+*.tlog
