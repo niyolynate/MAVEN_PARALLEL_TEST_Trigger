@@ -1,31 +1,32 @@
-# maven ignore
-target/
-*.jar
-*.war
-*.zip
-*.tar
-*.tar.gz
-
-# eclipse ignore
-.settings/
+*.class
+*~
+.*.swp
+.*.swo
+.loadpath
+.buildpath
 .project
+.settings
 .classpath
-
-# idea ignore
-.idea/
-*.ipr
+.metadata
+.springBeans
+.idea
 *.iml
+*.ipr
 *.iws
-
-# temp ignore
+git.properties
 *.log
-*.cache
-*.diff
-*.patch
-*.tmp
-
-# system ignore
+.checkstyle
+nbproject
 .DS_Store
-Thumbs.db
-
-dev/
+target
+test-output
+nbactions.xml
+build
+release.properties
+**/pom.xml.backup
+**/release.properties
+**/pom.xml.branch
+**/pom.xml.next
+**/pom.xml.releaseBackup
+**/pom.xml.tag
+atlassian-ide-plugin.xml

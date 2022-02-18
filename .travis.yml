@@ -1,11 +1,15 @@
+dist: trusty
 language: java
 jdk:
-  - oraclejdk8
-#  - oraclejdk7
 #  - openjdk7
-before_script:
-  - me.j360.disboot.websocket.echo "MAVEN_OPTS='-Xmx1024m -XX:MaxPermSize=256m'" > ~/.mavenrc
-after_success:
-  - mvn clean cobertura:cobertura
-  - bash <(curl -s https://codecov.io/bash)
-install: travis_wait 30 mvn install
+#  - oraclejdk7 disabling due to the container not being able to set JAVA_HOME correctly
+  - oraclejdk8
+  - openjdk8
+  - oraclejdk11
+sudo: false
+install: ./mvnw clean
+script: ./mvnw install site
+notifications:
+  email: false
+before_install:
+  - git submodule update --init --recursive
