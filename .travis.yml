@@ -1,42 +1,16 @@
 language: java
-
-env:
-  global:
-    - NUODB_HOME=/opt/nuodb
-    - TZ=America/New_York
-    - NUO_ADD_DOMAIN_PASS=yes
-    - NUO_START_AGENT=yes
-  matrix:
-    - NUO_VERSION=3.2.4.1 TABLE_LOCK=true
-    - NUO_VERSION=3.2.4.1 TABLE_LOCK=false
-
-jdk:
-  - openjdk8
-  - openjdk9
-  - openjdk10
-  - openjdk11
-  - oraclejdk8
-  - oraclejdk9
-  - oraclejdk11
-
-notifications:
-  recipients:
-    - migrator@nuodb.com
-
 before_install:
-  - echo madvise | sudo tee /sys/kernel/mm/transparent_hugepage/enabled >/dev/null
-  - echo madvise | sudo tee /sys/kernel/mm/transparent_hugepage/defrag >/dev/null
-
-  # There's a bug in the Trusty images where this gives a syntax error
-  # See https://github.com/travis-ci/travis-ci/issues/8906
-  - sudo mv /opt/jdk_switcher/jdk_switcher.sh /tmp
-
-  - ./test/mysql_setup.sh
-  - ./test/nuodb_setup.sh
-
-install: mvn -U clean install
-
-script:
-  - ./test/mysql_basic.sh
-  - ./test/batch_test.sh
-
+  - sudo apt-get -qq update
+  - sudo apt-get -qq install libstdc++6:i386 libgcc1:i386 zlib1g:i386 libncurses5:i386 libsdl1.2debian:i386 libv4l-dev
+  - wget https://javacv.googlecode.com/files/javacv-0.4-cppjars.zip
+  - unzip -qq javacv-0.4-cppjars.zip
+  - unzip -o -qq javacv-cppjars/opencv-2.4.4-linux-x86_64.jar
+  - unzip -o -qq javacv-cppjars/ffmpeg-1.1.3-linux-x86_64.jar
+  - export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${PWD}/com/googlecode/javacv/cpp/linux-x86_64
+  - sudo ldconfig
+# no android automatic build
+#  - wget http://dl.google.com/android/android-sdk_r21-linux.tgz
+#  - tar -zxf android-sdk_r21-linux.tgz
+#  - export ANDROID_HOME=${PWD}/android-sdk-linux
+#  - export PATH=${PATH}:${ANDROID_HOME}/tools:${ANDROID_HOME}/platform-tools
+#  - android update sdk --filter 1,2,4,5 --no-ui --force
