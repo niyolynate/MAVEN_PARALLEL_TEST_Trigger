@@ -1,8 +1,0 @@
-name: "CodeQL config"
-paths-ignore:
-  - 'findsecbugs-samples-deps'
-  - 'findsecbugs-samples-java'
-  - 'findsecbugs-samples-jsp'
-  - 'findsecbugs-samples-kotlin'
-  - 'findsecbugs-test-util'
-  
