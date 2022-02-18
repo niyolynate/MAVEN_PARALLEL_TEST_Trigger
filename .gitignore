@@ -1,11 +1,28 @@
-build
-target
+#Eclipse
+.classpath
+.project
 test-output
 .settings
-.project
-.classpath
-.idea
-objectify.iml
-.svn
-.gwt
+
+#IntelliJ
+*.iml
+*.ipr
+*.iws
+.idea/
+
+#Neo4j
+*.db/
+
+#Gradle
 .gradle
+
+#Build directories
+bin/
+build/
+target/
+
+#Maven
+*.versionsBackup
+
+#Tests artifacts
+plugin/derived-config.txt
