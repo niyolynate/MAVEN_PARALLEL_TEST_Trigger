@@ -1,165 +1,317 @@
-# A Jenkins API Client for Java
+[![Build Status](https://travis-ci.org/dropwizard-jobs/dropwizard-jobs.svg?branch=master)](https://travis-ci.org/dropwizard-jobs/dropwizard-jobs)
+[![DepShield Badge](https://depshield.sonatype.org/badges/dropwizard-jobs/dropwizard-jobs/depshield.svg)](https://depshield.github.io)
+[![CodeFactor](https://www.codefactor.io/repository/github/dropwizard-jobs/dropwizard-jobs/badge)](https://www.codefactor.io/repository/github/dropwizard-jobs/dropwizard-jobs)
+[![Maintainability](https://api.codeclimate.com/v1/badges/71ea62844095d88b2264/maintainability)](https://codeclimate.com/github/dropwizard-jobs/dropwizard-jobs/maintainability)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/71ea62844095d88b2264/test_coverage)](https://codeclimate.com/github/dropwizard-jobs/dropwizard-jobs/test_coverage)
+# Dropwizard quartz integration
 
-[![MIT Licence](https://img.shields.io/github/license/jenkinsci/java-client-api.svg?label=License)](http://opensource.org/licenses/MIT)
-[![Maven Central](https://img.shields.io/maven-central/v/com.offbytwo.jenkins/jenkins-client.svg?label=Maven%20Central)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22com.offbytwo.jenkins%22%20a%3A%22jenkins-client%22)
-[![Build Status](https://travis-ci.org/jenkinsci/java-client-api.svg?branch=master)](https://travis-ci.org/jenkinsci/java-client-api)
-[![Javadocs](https://javadoc.io/badge/com.offbytwo.jenkins/jenkins-client.svg?color=blue)](https://javadoc.io/doc/com.offbytwo.jenkins/jenkins-client)
+This plugin integrates the [quartz scheduler](http://quartz-scheduler.org/) with dropwizard and allows you to easily create background jobs, which are not bound to the HTTP request-response cycle.
+Quartz creates a threadpool on application startup and uses it for background jobs.
 
-## Important Note
+There are four different types of jobs:
 
-The Jenkins API Client For Java has now moved under the umbrella of the Jenkins GitHub Organization.
+* Jobs run on application start for initial setup (could also be done via a managed instance in dropwizard)
+* Jobs run at application stop before the application is closed (could also be done via managed instance in dropwizard)
+* Jobs which are repeated after a certain time interval
+* Jobs which need to run at a specific time, via a cron-like expression
 
-## What is the "Jenkins API Client for Java"?
+## Using maven central repository
+dropwizard jobs can be used with maven.
+It is located in Central Repository. http://search.maven.org/
 
-This library is just a piece of java code which uses the REST API of jenkins.
-This means you can trigger builds, extract informations about jobs or builds
-etc. The information you can extract will be represented in java objects which
-you can reuse for other purposes or integrate this library into other parts for
-a higher level of integration.
- 
-## Getting Started
-
-If you like to use this library you need to add the library as a dependency
-to your project. This can be done by using a Maven dependency like the following: 
-
+Add to your pom:
 ```xml
 <dependency>
-  <groupId>com.offbytwo.jenkins</groupId>
-  <artifactId>jenkins-client</artifactId>
-  <version>0.3.8</version>
+  <groupId>io.github.dropwizard-jobs</groupId>
+  <artifactId>dropwizard-jobs</artifactId>
+  <version>4.0.0-RELEASE</version>
 </dependency>
 ```
 
-This can also being done by defining a Gradle dependency like this:
+## API changes from 3.x
+The 3.x release has breaking API changes that would need to be addressed if upgrading from an older version. The
+signature of the <code>doJob()</code> method has changed and now takes a <code>JobExecutionContext</code> as an
+argument and also throws a <code>JobExecutionException</code>.
+
+##### 3.x
+```java
+  @Override
+  public void doJob(JobExecutionContext context) throws JobExecutionException {
+    ...
+  }
+```
+
+##### < 3.x
+```java
+  @Override
+  public void doJob() {
+    ...
+  }
+```
+
+
+## Installing the bundle from source code
 
 ```
-compile 'com.offbytwo.jenkins:jenkins-client:0.3.8'
+git clone https://github.com/dropwizard-jobs/dropwizard-jobs
+cd dropwizard-jobs
+./mvn install
 ```
 
-Starting with a future release 0.4.0 the groupId/artifactId will change (NOT YET DONE!)
+After installing the plugin locally you can include it in your pom.xml
 
 ```xml
 <dependency>
-  NOT YET FINALIZED NOR RELEASED !!!
-  <groupId>org.jenkins-ci.lib</groupId>
-  <artifactId>java-client-api</artifactId>
-  <version>0.4.0</version>
+  <groupId>io.github.dropwizard-jobs</groupId>
+  <artifactId>dropwizard-jobs</artifactId>
+  <version>$VERSION</version>
 </dependency>
 ```
 
-## Usage
+## Activating the bundle: Configuration
 
-The `com.offbytwo.jenkins.JenkinsServer` class provides the main entry
-point into the API. You can create a reference to the Jenkins server
-given its location and (optionally) a username and password/token.
+Your Dropwizard application configuration class must implement `JobConfiguration`:
 
 ```java
-JenkinsServer jenkins = new JenkinsServer(new URI("http://localhost:8080/jenkins"), "admin", "password")
+public class ApplicationConfiguration extends Configuration implements JobConfiguration {
+
+...
+
+}
+
 ```
 
-At the top level you can access all of the currently defined
-jobs. This returns a map of job names (in lower case) to jobs.
+By default, `JobConfiguration` will return an empty configuration. If you want to allow configuring Quartz from your Dropwizard YML config file (recommended), then implement the `getQuartzConfiguration` method:
 
 ```java
-Map<String, Job> jobs = jenkins.getJobs()
+public class ApplicationConfiguration extends Configuration implements JobConfiguration {
+
+...
+    @JsonProperty("quartz")
+    public Map<String,String> quartz;
+
+    @Override
+    public Map<String,String> getQuartzConfiguration() {
+        return quartz;
+    }
+}
 ```
 
-The Job class provides only summary information (name and url). You can retrieve details as follows
+## Activating the bundle: Initialization
+
+In your application's `initialize` method, call `bootstrap.addBundle(new JobsBundle(<list of jobs>))`:
 
 ```java
-JobWithDetails job = jobs.get("My Job").details()
+@Override
+public void initialize(Bootstrap<MyConfiguration> bootstrap) {
+  SomeDependency dependency = new Dependency();
+  Job startJob = new StartupJob();
+  Job stopJob = new StopJob();
+  Job everyJob = new EveryTestJob(dependency);
+  bootstrap.addBundle(new JobsBundle(startJob, stopJob, everyJob));
+}
 ```
 
-The `JobWithDetails` class provides you with access to the list of
-builds (and related information such as the first, last, successful,
-etc) and upstream and downstream projects.
+## Available job types
 
-## Running Tests
-To run only unit tests without invoking the integration tests use the following command:
+The <code>@OnApplicationStart</code> annotation triggers a job after the quartz scheduler is started
 
-```
-mvn clean install -DskipITs
-```
-
-## Running Integration Tests
-To run integration tests simply start
-
-```
-mvn -Prun-its clean verify
+```java
+@OnApplicationStart
+public class StartupJob extends Job {
+  @Override
+  public void doJob(JobExecutionContext context) throws JobExecutionException {
+    // logic run once on application start
+  }
+}
 ```
 
-There is also a module which contains [integration tests][integration-tests] 
-which are running with a special version of Jenkins
-within a Docker container to check several aspects of the API which can't be
-covered by the usual integration tests.
+The <code>@OnApplicationStop</code> annotation triggers a job when the application is stopped. Be aware that it is not guaranteed that this job is executed, in case the application is killed.
 
-## Release Notes
-
-You can find details about the different releases in the [Release Notes](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md).
-
- * [Release 0.3.9 NOT RELEASED YET](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md#release-039).
- * [Release 0.3.8](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md#release-038).
- * [Release 0.3.7](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md#release-037).
- * [Release 0.3.6](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md#release-036).
- * [Release 0.3.5](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md#release-035).
- * [Release 0.3.4](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md#release-034).
- * [Release 0.3.3](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md#release-033).
- * [Release 0.3.2](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md#release-032).
- * [Release 0.3.1](https://github.com/jenkinsci/java-client-api/blob/master/ReleaseNotes.md#release-031).
-
-## Contribution
-
-### Creating Issues
-
-If you find a problem please create an 
-[issue in the ticket system with the component `java-client-api`](https://issues.jenkins-ci.org/projects/JENKINS/)
-and describe what is going wrong or what you expect to happen.
-If you have a full working example or a log file this is also helpful.
-You should of course describe only a single issue in a single ticket and not 
-mixing up several different things into a single issue.
-
-### Creating a Pull Request
-
-Before you create a pull request it is necessary to create an issue in
-the [ticket system before with the component `java-client-api`](https://issues.jenkins-ci.org/browse/JENKINS)
-and describe what the problem is or what kind of feature you would like
-to add. Afterwards you can create an appropriate pull request.
-
-It is required if you want to get a Pull request to be integrated into please
-squash your commits into a single commit which references the issue in the
-commit message which looks like this:
-
-```
-Fixed #Issue
- o Description.
+```java
+@OnApplicationStop
+public class StopJob extends Job {
+  @Override
+  public void doJob(JobExecutionContext context) throws JobExecutionException {
+    // logic run once on application stop
+  }
+}
 ```
 
-This makes it simpler to merge it and this will also close the
-appropriate issue automatically in one go. This make the life as 
-maintainer a little bit easier.
+The <code>@Every</code> annotation first triggers a job after the quartz scheduler is started and then every n times, as it is configured. You can use a number and a time unit, which can be one of "s" for seconds, "m" or "mn" or "min" for minutes, "h" for hours, "d" for days and "ms" for milliseconds.
+Use in conjunction with <code>@DelayStart</code> to delay the first invocation of this job.
 
-A pull request has to fulfill only a single ticket and should never
-create/add/fix several issues in one, cause otherwise the history is hard to
-read and to understand and makes the maintenance of the issues and pull request
-hard or to be honest impossible.
+```java
+@Every("1s")
+public class EveryTestJob extends Job {
+  @Override
+  public void doJob(JobExecutionContext context) throws JobExecutionException {
+    // logic run every time and time again
+  }
+}
+```
 
-Furthermore it is necessary to create appropriate entries into the `ReleaseNotes.md`
-file as well.
+The <code>@DelayStart</code> annotation can be used in conjunction with @Every to delay the start of the job. Without this, all the @Every jobs start up at the same time when the scheduler starts.
 
+```java
+@DelayStart("5s")
+@Every("1s")
+public class EveryTestJobWithDelayedStart extends Job {
+  @Override
+  public void doJob(JobExecutionContext context) throws JobExecutionException {
+    // logic run every time and time again
+  }
+}
+```
 
-## Help & Questions
+The <code>@On</code> annotation allows one to use cron-like expressions for complex time settings. You can read more about possible cron expressions at http://quartz-scheduler.org/documentation/quartz-2.1.x/tutorials/tutorial-lesson-06
 
-You can ask questions in the [mailing list](https://groups.google.com/d/forum/java-client-api)
- which is also intended as discussion forum for development.
+This expression would run on Mondays at 1pm, Los Angeles time. If the optional parameter `timeZone` is not set system default will be used. 
 
-## Generated Site
+```java
+@On("0 0 13 ? * MON", timeZone = "America/Los_Angeles")
+public class OnTestJob extends Job {
+  @Override
+  public void doJob(JobExecutionContext context) throws JobExecutionException {
+    // logic run via cron expression
+  }
+}
+```
 
-http://jenkinsci.github.io/java-client-api/
+By default a class can only be scheduled once in the jobs bundle, this can be overridden by setting a unique `groupName` to the instance.
+```java
+@Every("15m")
+public class GroupNameJob extends Job {
+  public GroupNameJob(String groupName) {
+      super(groupName);
+  }
+}
+```
 
-## License
+## Using dropwizard-jobs in a Clustered Environment
 
-Copyright (C) 2013, Cosmin Stejerean, Karl Heinz Marbaise, and contributors.
+By default, dropwizard-jobs is designed to be used with an in-memory Quartz scheduler. If you wish to deploy it in a clustered environment that consists of more than one node, you'll need to use a scheduler that has some sort of persistence. You can either add a file called `quartz.properties` to your classpath or you can provide the quartz configuration in your Dropwizard configuration file. The content of the `quartz` element is passed to the Quartz scheduler directly (so you can take the properties from the official docs). If you'd like to add the config to your Dropwizard configuration file, you need to override the `getQuartzConfiguration()` method in your application's configuration. You can set the map to `DefaultQuartzConfiguration.get()`.
 
-Distributed under the MIT license: http://opensource.org/licenses/MIT
+See the full Quartz configuration reference at http://www.quartz-scheduler.org/documentation/quartz-2.x/configuration/
+```yaml
+[...]
+quartz:
+  org.quartz.scheduler.instanceName: "scheduler"
+  org.quartz.scheduler.instanceId: "AUTO"
+  org.quartz.scheduler.skipUpdateCheck: "true"
+  org.quartz.threadPool.class: "org.quartz.simpl.SimpleThreadPool"
+  org.quartz.threadPool.threadCount: "10"
+  org.quartz.threadPool.threadPriority: "5"
+  org.quartz.jobStore.misfireThreshold: "60000"
+  org.quartz.jobStore.class: "org.quartz.impl.jdbcjobstore.JobStoreTX"
+  org.quartz.jobStore.driverDelegateClass: "org.quartz.impl.jdbcjobstore.StdJDBCDelegate"
+  org.quartz.jobStore.useProperties: "false"
+  org.quartz.jobStore.dataSource: "myDS"
+  org.quartz.jobStore.tablePrefix: "QRTZ_"
+  org.quartz.jobStore.isClustered: "true"
+  org.quartz.dataSource.myDS.driver: "com.mysql.cj.jdbc.Driver"
+  org.quartz.dataSource.myDS.URL: "jdbc:mysql://localhost:3306/quartz"
+  org.quartz.dataSource.myDS.user: "fami"
+  org.quartz.dataSource.myDS.password: "ageClXl5mrSg"
+  org.quartz.dataSource.myDS.maxConnections: "5"
+  org.quartz.dataSource.myDS.validationQuery: "select 1"
+```
 
-[integration-tests]: https://github.com/jenkinsci/java-client-api/tree/master/jenkins-client-it-docker
+When you do this, dropwizard-jobs will ensure that only one instance of each job is scheduled, regardless of the number of nodes in your cluster by using the fully-qualified class name of your job implementation as the name of your job. For example, if your job implementation resides in a class called `MyJob`, which in turn is located in the package `com.my.awesome.web.app`, then the name of your job (so far as Quartz is concerned) will be `com.my.awesome.web.app.MyJob`.
+
+If you wish to override the default name that dropwizard-jobs assigns to your job, you can do so by setting the `jobName` property in the `@Every` or `@On` annotation like so:
+
+```Java
+package com.my.awesome.web.app
+
+/**
+ * This job will be given the name "MyJob" instead of the name "com.my.awesome.web.app.MyJob"
+ */
+@Every(value="5s", jobName="MyJob")
+public class MyJob extends Job {
+  @Override
+  public void doJob(JobExecutionContext context) throws JobExecutionException {
+    // do some work here
+  }
+}
+```
+This property is not supported in the `@OnApplicationStart` or `@ApplicationStop` annotations, as they are designed for jobs that will fire reliably when Dropwizard starts or stops your web application. As such, jobs annotated with `@OnApplicationStart` or `@OnApplicationStop` will be given unique names, and will be fired according to schedule on every node in your cluster.
+
+## Configuring jobs in the Dropwizard Config File
+
+The period for `@Every` and `@On` jobs can be read from the dropwizard config file instead of being hard-coded. The YAML looks like this:
+
+```
+jobs:
+  myJob: 10s
+  myOtherJob: 20s
+  cronJob: "0 0/3 0 ? * * * [Europe/London]"
+```
+
+For `@On` jobs, the cron expression can have an optional timezone specified in square brackets.
+If no timezone is given, the `de.spinscale.dropwizard.jobs.timezone` system property will be used,
+otherwise your server's default timezone will apply.
+
+Where MyJob and MyOtherJob are the names of Job classes in the application. In the <code>Configuration</code> class add the corresponding property:
+
+```java
+@JsonProperty("jobs")
+private Map<String , String> jobs;
+
+public Map<String, String> getJobs() {
+    return jobs;
+}
+
+public void setJobs(Map<String, String> jobs) {
+    this.jobs = jobs;
+}
+```
+
+Then the <code>@Every</code> annotation can be used without a value, its value is set from the configuration:
+
+```java
+@Every
+public class MyJob extends Job {
+    ...
+}
+```
+
+An alternative label to the class name can also be specified:
+
+```java
+@Every("${foobar}")
+public class MyJob extends Job {
+    ...
+}
+```
+The same can be done with the <code>@On</code> annotation as well, as second option to cron-base jobs configuration
+An alternative label to the class name can also be specified:
+
+```java
+@On("${cronJob}")
+public class MyJob extends Job {
+    ...
+}
+```
+
+So long as there is a matching property in the YAML:
+
+```
+jobs:
+  foobar: 10s
+```
+
+# Limitations
+* Configuration mechanism is still in early stages. Might be enhanced in the future.
+
+# Thanks
+
+* The playframework 1.x for the idea of simple annotations at Job classes
+
+# Contributors
+ * [Alexander Reelsen](https://github.com/spinscale)
+ * [Hakan Dilek](https://github.com/hakandilek)
+ * [Yun Zhi Lin](https://github.com/yunspace)
+ * [Eyal Golan](https://github.com/eyalgo)
+ * [Jonathan Fritz](https://github.com/MusikPolice)
+ * [Ahsan Rabbani](https://github.com/xargsgrep)
