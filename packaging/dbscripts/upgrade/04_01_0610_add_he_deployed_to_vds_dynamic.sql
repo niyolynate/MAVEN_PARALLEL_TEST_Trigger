@@ -1,1 +1,0 @@
-SELECT fn_db_add_column('vds_dynamic', 'hosted_engine_configured', 'BOOLEAN NOT NULL DEFAULT FALSE');

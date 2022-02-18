@@ -1,7 +1,0 @@
-<FindBugsFilter>
-  <!--Ignore generated files-->
-  <Match>
-    <Class name="~org.ovirt.engine.benchmarks[.]generated.*" />
-  </Match>
-</FindBugsFilter>
-

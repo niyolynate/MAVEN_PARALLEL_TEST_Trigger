@@ -1,2 +1,0 @@
--- This file moved to 04_02_0135_fix_max_memory_size_limit.sql,
--- keeping it because we require consecutive numbers.

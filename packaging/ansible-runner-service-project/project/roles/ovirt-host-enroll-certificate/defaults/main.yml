@@ -1,6 +1,0 @@
-# VDSM config file path:
-ovirt_vdsm_config_file: '/etc/vdsm/vdsm.conf'
-
-# Certificate paths:
-## vdsm
-ovirt_vdsm_trust_store: '/etc/pki/vdsm'

@@ -1,1 +1,0 @@
-SELECT fn_db_drop_constraint('image_transfers', 'fk_image_transfers_command_enitites');

@@ -1,2 +1,0 @@
-SELECT fn_db_drop_constraint('storage_domain_static', 'storage_domain_static_first_metadata_device_fkey');
-SELECT fn_db_drop_constraint('storage_domain_static', 'storage_domain_static_vg_metadata_device_fkey');

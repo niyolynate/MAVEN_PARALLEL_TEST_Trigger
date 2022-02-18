@@ -1,1 +1,0 @@
-SELECT fn_db_add_column('vm_backups', 'is_live_backup', 'BOOLEAN DEFAULT FALSE NOT NULL');

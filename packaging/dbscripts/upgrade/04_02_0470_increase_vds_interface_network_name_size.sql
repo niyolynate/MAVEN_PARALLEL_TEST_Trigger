@@ -1,1 +1,0 @@
-ALTER TABLE vds_interface ALTER COLUMN network_name TYPE varchar(256);

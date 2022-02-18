@@ -1,1 +1,0 @@
-SELECT fn_db_add_column('storage_domain_static', 'warning_low_confirmed_space_indicator', 'integer default null');

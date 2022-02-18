@@ -1,1 +1,0 @@
-select fn_db_add_column('step', 'progress', 'SMALLINT DEFAULT NULL');

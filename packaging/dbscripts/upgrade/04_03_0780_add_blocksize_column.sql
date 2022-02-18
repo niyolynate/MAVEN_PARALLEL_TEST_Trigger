@@ -1,1 +1,0 @@
-SELECT fn_db_add_column('storage_domain_static', 'block_size', 'integer default 512');

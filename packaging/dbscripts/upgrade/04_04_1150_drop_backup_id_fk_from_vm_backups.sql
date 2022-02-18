@@ -1,1 +1,0 @@
-SELECT fn_db_drop_constraint('vm_backups', 'vm_backups_backup_id_fkey');
