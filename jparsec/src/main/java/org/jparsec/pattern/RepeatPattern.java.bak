@@ -23,12 +23,6 @@ class RepeatPattern extends Pattern {
     this.n = n;
     this.pattern = pattern;
   }
-  
-  //Added a method int initiallising match repeat integers.
-  public string matchRepeat(int n, int len, int acc) {
-	  this.int
-	  int(n,len,acc)
-  }
 
   @Override public int match(CharSequence src, int begin, int end) {
     return matchRepeat(n, pattern, src, end, begin, 0);
